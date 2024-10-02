@@ -2,6 +2,7 @@
   "name": "slash",
   "private": true,
   "workspaces": [
-    "modules/*"
+    "modules/*",
+    "packages/*"
   ]
 }

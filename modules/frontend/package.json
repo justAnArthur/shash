@@ -6,9 +6,9 @@
   "author": "justAnArthur <honeymad4you@tutanota.com>",
   "private": true,
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "lint": ""
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

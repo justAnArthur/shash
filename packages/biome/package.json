@@ -1,0 +1,8 @@
+{
+  "name": "@slash/biome",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "1.9.3"
+  }
+}
