@@ -1,0 +1,16 @@
+GET http://localhost:3333
+
+###
+POST http://localhost:3333/users/login
+Content-Type: application/json
+
+{
+  "email": "user1@user.user",
+  "password": "user1"
+}
+
+###
+
+GET http://localhost:3333/users/0aae73c3-13b7-42cc-95ef-97c16ac116a5
+
+###

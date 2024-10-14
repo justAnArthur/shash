@@ -6,7 +6,7 @@ const loggerConfig = defineConfig({
   default: 'app',
 
   /**
-   * The loggers object can be used to define multiple loggers.
+   * The logger object can be used to define multiple loggers.
    * By default, we configure only one logger (named "app").
    */
   loggers: {

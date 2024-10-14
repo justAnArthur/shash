@@ -24,7 +24,7 @@ export default class GuestMiddleware {
       if (await ctx.auth.use(guard).check()) {
         return ctx.response.redirect(this.redirectTo, true)
       }
-    }
+    }2
 
     return next()
   }
