@@ -1,9 +1,10 @@
 <template>
-
-  <div class="flex column items-center">
-    <chat-header :chat-name="currentChatId" />
-    <chat-screen :chat-id="currentChatId" class="col-6" />
-    <chat-input />
+  <div class="row justify-center bg-dark" style="padding: 5vh 0">
+    <div class="chat-container col-12 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4">
+      <chat-header :chat-name="currentChatId" />
+      <chat-screen :chat-id="currentChatId" />
+      <chat-input />
+    </div>
   </div>
 </template>
 
@@ -25,7 +26,7 @@ export default defineComponent({
     const messages = ref([])
 
     const addMessage = (message) => {
-      messages.value.push(message)
+      messages.value = [...messages.value, message] // Add the new message to the list(message)
     }
 
     // Provide the shared state and methods
@@ -42,13 +43,6 @@ export default defineComponent({
 </script>
 
 <style>
-.chat-container {
-  width: 60%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
@@ -56,5 +50,14 @@ export default defineComponent({
 * {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.chat-container {
+  background: rgb(36, 37, 44);
+  border-radius: 25px;
+}
+
+.q-toolbar {
+  height: 5vh;
 }
 </style>
