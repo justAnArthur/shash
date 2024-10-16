@@ -8,7 +8,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
-const { configure } = require("quasar/wrappers")
+const { configure } = require("quasar/wrappers");
 
 module.exports = configure((ctx) => ({
   // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -71,12 +71,26 @@ module.exports = configure((ctx) => ({
       type: "http",
     },
     port: 8080,
-    open: true, // opens browser window automatically
+    open: false, // opens browser window automatically
   },
 
   // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
   framework: {
-    config: {},
+    config: {
+      brand: {
+        primary: "#0d205e",
+        secondary: "#24252c",
+        accent: "#9C27B0",
+
+        dark: "#11141f",
+        "dark-page": "#0b0c14",
+
+        positive: "#21BA45",
+        negative: "#C10015",
+        info: "#31CCEC",
+        warning: "#F2C037",
+      },
+    },
 
     // iconSet: 'material-icons', // Quasar icon set
     // lang: 'en-US', // Quasar language pack
@@ -207,4 +221,4 @@ module.exports = configure((ctx) => ({
       // extendWebpackPreload also available besides this chainWebpackPreload
     },
   },
-}))
+}));
