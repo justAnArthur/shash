@@ -52,7 +52,7 @@ export default {
 }
 
 #header {
-  background-color: rgba(40, 40, 40, .9);
+  background-color: var(--color-10);
   padding: 1rem;
 }
 
@@ -75,7 +75,7 @@ export default {
 }
 
 #chat-side {
-  background-color: rgba(40, 40, 40, .8);
+  background-color: var(--color-10);
   padding: 1rem;
 
   width: 20rem;
@@ -95,7 +95,7 @@ export default {
   padding: 12px 36px 12px 12px;
   border-radius: 20px;
 
-  background: hsla(0, 0%, 97%, .05);
+  background: var(--color-20);
   transition: background-color;
 
   cursor: pointer;
@@ -128,7 +128,6 @@ export default {
 #chat {
   height: 100%;
   padding: 1rem;
-  background-color: rgba(40, 40, 40, .6);
 
   display: flex;
   flex-direction: column-reverse;
@@ -142,9 +141,5 @@ export default {
   max-width: 3rem;
   max-height: 3rem;
   aspect-ratio: 1/1;
-}
-
-#chat-one:hover {
-  background: hsla(0, 0%, 97%, .07);
 }
 </style>

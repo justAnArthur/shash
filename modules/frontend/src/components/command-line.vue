@@ -180,7 +180,7 @@ export default {
   padding: 1.5rem;
   border-radius: 1.5rem;
 
-  background: #2b2b2b;
+  background: var(--color-30);
 }
 
 #command-line {
@@ -203,7 +203,7 @@ export default {
   bottom: 50%;
   padding: 1.5rem 1rem 4rem;
 
-  background: #2e2e2e;
+  background: var(--color-10);
   border-radius: 1.5rem 1.5rem 0 0;
 
   overflow: hidden;
@@ -225,12 +225,12 @@ export default {
   height: fit-content;
   padding: 12px 36px 12px 12px;
   border-radius: 15px;
-  background: hsla(0, 0%, 97%, .02);
+  background: var(--color-20);
   transition: background-color;
   cursor: pointer;
 }
 
 #suggestions-item.is-active {
-  background: hsla(0, 0%, 97%, .05);
+  background: var(--color-10)
 }
 </style>
