@@ -16,7 +16,7 @@ body {
   --color-white: #fff;
   --color-dark: #222;
   --color-success: #8dc572;
-  --color-error: #be6464;
+  --color-error: #ff3333;
   --color-warning: #f0ad4e;
   --color-info: #337ab7;
   --opacity: 0.9;
@@ -76,10 +76,9 @@ html {
 }
 
 .q-input {
-  margin-bottom: 20px;
   height: 52px;
-  padding: 0 18px;
   width: 100%;
+  padding: 0 18px;
   background: var(--color-20);
   border-radius: 12px;
   border: 1.5px solid transparent;
@@ -96,6 +95,15 @@ html {
 }
 
 .auth-error-message {
-  color: #f44336;
-  margin-top: 10px;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 5px;
+  color: var(--color-error);
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+.input-wrapper {
+  margin-bottom: 20px;
+  width: 100%;
 }
