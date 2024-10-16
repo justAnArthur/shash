@@ -37,7 +37,7 @@ html {
   padding: 0 24px;
   height: 44px;
   border-radius: 32px;
-  background: rgba(40, 40, 40, 0.7);
+  background: var(--color-30);
   box-shadow: inset 2px 4px 16px 0 hsla(0, 0%, 97%, 0.06);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
@@ -45,7 +45,9 @@ html {
   line-height: 1.4;
   font-weight: 600;
   color: hsla(0, 0%, 97%, 0.7);
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   cursor: pointer;
 }
 
@@ -62,7 +64,7 @@ html {
 
 .q-btn:hover {
   color: hsla(0, 0%, 97%, 0.95);
-  background: rgba(40, 40, 40, 0.5);
+  background: var(--color-20);
 }
 
 .auth-title {
@@ -78,7 +80,7 @@ html {
   height: 52px;
   padding: 0 18px;
   width: 100%;
-  background: hsla(0, 0%, 97%, 0.05);
+  background: var(--color-20);
   border-radius: 12px;
   border: 1.5px solid transparent;
   font-size: 14px;
