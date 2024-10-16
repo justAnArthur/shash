@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from "vue-router"
+import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   // {
@@ -10,15 +10,31 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: () => import("layouts/(authorized)/index.vue"),
-    children: [{ path: "", component: () => import("pages/(authorized)/index.vue") }]
+    children: [
+      { path: "", component: () => import("pages/(authorized)/index.vue") },
+    ],
+  },
+  {
+    path: "/auth",
+    component: () => import("layouts/(unauthorized)/index.vue"),
+    children: [
+      //{
+      //  path: "register",
+      //  component: () => import("pages/(unauthorized)/register/index.vue"),
+      //},
+      {
+        path: "login",
+        component: () => import("pages/(unauthorized)/login/index.vue"),
+      },
+    ],
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue")
-  }
-]
+    component: () => import("pages/ErrorNotFound.vue"),
+  },
+];
 
-export default routes
+export default routes;
