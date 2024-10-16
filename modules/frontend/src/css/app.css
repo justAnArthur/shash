@@ -1,1 +1,41 @@
 /* app global css */
+body {
+  background: #444;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: hsla(0, 0%, 97%, 0.95);
+}
+
+.q-btn {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24px;
+  height: 44px;
+  border-radius: 32px;
+  background: rgba(40, 40, 40, 0.7);
+  box-shadow: inset 2px 4px 16px 0 hsla(0, 0%, 97%, 0.06);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: hsla(0, 0%, 97%, 0.7);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.q-btn:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  pointer-events: none;
+  border: 1.5px solid hsla(0, 0%, 100%, 0.1);
+  -webkit-mask-image: linear-gradient(175deg, #000, transparent 50%);
+  mask-image: linear-gradient(175deg, #000, transparent 50%);
+}
