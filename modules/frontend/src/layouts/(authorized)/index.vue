@@ -15,39 +15,7 @@
     </header>
 
     <main id="chat" style="flex: 1 1 0;">
-      <div id="chat-input-wrapper">
-        <textarea id="chat-input" type="text" rows="1" placeholder="Slash is /"/>
-      </div>
-
-      <div class="chat-message">
-        <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
-        <div style="display: grid; gap: 0.5rem">
-          <div style="display: flex; gap: 0.5rem; align-items: center">
-            <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Arthur</h2>
-            <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">09:22 AM</div>
-          </div>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat.
-          </p>
-        </div>
-      </div>
-
-      <div class="chat-message">
-        <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
-        <div style="display: grid; gap: 0.5rem">
-          <div style="display: flex; gap: 0.5rem; align-items: center">
-            <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Anastasiia</h2>
-            <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">03:42 PM</div>
-          </div>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </p>
-        </div>
-      </div>
+      <router-view/>
     </main>
 
     <aside id="chat-side">
@@ -157,10 +125,6 @@ export default {
   opacity: 1;
 }
 
-#chat-one:hover {
-  background: hsla(0, 0%, 97%, .07);
-}
-
 #chat {
   height: 100%;
   padding: 1rem;
@@ -171,35 +135,6 @@ export default {
   gap: 1rem;
 }
 
-#chat-input-wrapper {
-  position: relative;
-
-  padding: 1.5rem;
-  border-radius: 20px;
-
-  background: hsla(0, 0%, 7%, .3);
-}
-
-#chat-input {
-  width: 100%;
-}
-
-#chat-input:focus-visible {
-  outline: none !important;
-}
-
-.chat-message {
-  display: flex;
-  gap: 1rem;
-
-  padding: 12px 36px 12px 12px;
-  border-radius: 20px;
-
-  background: hsla(0, 0%, 97%, .05);
-
-  color: hsla(0, 0%, 97%, .56);
-}
-
 .chat-message img {
   border-radius: 999px;
   min-width: 3rem;
@@ -207,5 +142,9 @@ export default {
   max-width: 3rem;
   max-height: 3rem;
   aspect-ratio: 1/1;
+}
+
+#chat-one:hover {
+  background: hsla(0, 0%, 97%, .07);
 }
 </style>
