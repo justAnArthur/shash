@@ -18,10 +18,10 @@ const routes: RouteRecordRaw[] = [
     path: "/auth",
     component: () => import("layouts/(unauthorized)/index.vue"),
     children: [
-      //{
-      //  path: "register",
-      //  component: () => import("pages/(unauthorized)/register/index.vue"),
-      //},
+      {
+        path: "register",
+        component: () => import("pages/(unauthorized)/register/index.vue"),
+      },
       {
         path: "login",
         component: () => import("pages/(unauthorized)/login/index.vue"),

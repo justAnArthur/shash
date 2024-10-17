@@ -16,7 +16,7 @@ body {
   --color-white: #fff;
   --color-dark: #222;
   --color-success: #8dc572;
-  --color-error: #be6464;
+  --color-error: #ff3333;
   --color-warning: #f0ad4e;
   --color-info: #337ab7;
   --opacity: 0.9;
@@ -37,7 +37,7 @@ html {
   padding: 0 24px;
   height: 44px;
   border-radius: 32px;
-  background: rgba(40, 40, 40, 0.7);
+  background: var(--color-30);
   box-shadow: inset 2px 4px 16px 0 hsla(0, 0%, 97%, 0.06);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
@@ -45,7 +45,9 @@ html {
   line-height: 1.4;
   font-weight: 600;
   color: hsla(0, 0%, 97%, 0.7);
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   cursor: pointer;
 }
 
@@ -60,9 +62,48 @@ html {
   mask-image: linear-gradient(175deg, #000, transparent 50%);
 }
 
-
 .q-btn:hover {
   color: hsla(0, 0%, 97%, 0.95);
-  background: rgba(40, 40, 40, 0.5);
+  background: var(--color-20);
 }
 
+.auth-title {
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.q-input {
+  height: 52px;
+  width: 100%;
+  padding: 0 18px;
+  background: var(--color-20);
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  font-size: 14px;
+  line-height: 1.4;
+  color: hsla(0, 0%, 97%, 0.76);
+  transition: all 0.2s;
+}
+
+.auth-footer-text {
+  margin-top: 40px;
+  text-align: center;
+  color: hsla(0, 0%, 97%, 0.76);
+}
+
+.auth-error-message {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 5px;
+  color: var(--color-error);
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+.input-wrapper {
+  margin-bottom: 20px;
+  width: 100%;
+}
