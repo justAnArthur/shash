@@ -1,8 +1,6 @@
-export interface Todo {
-  id: number
-  content: string
-}
-
-export interface Meta {
-  totalCount: number
+export interface IMessage {
+  text: String;
+  author: String;
+  time: EpochTimeStamp;
+  id?: String;
 }

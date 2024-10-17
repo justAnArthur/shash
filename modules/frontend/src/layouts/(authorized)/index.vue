@@ -30,34 +30,18 @@
     </main>
 
     <aside id="chat-side">
-      <ul id="chat-list">
-        <li class="chat-one">
-          <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
-          <div style="display: grid; gap: 0.5rem">
-            <div style="display: flex; gap: 0.5rem; align-items: center">
-              <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Arthur</h2>
-              <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">1m</div>
-            </div>
-            <p>
-              Hello from old friend...
-            </p>
-          </div>
-        </li>
-      </ul>
+      <chat-list />
     </aside>
   </main>
 </template>
 
-<script>
-export default {
-  name: 'MainLayout'
-}
+<script setup>
+import ChatList from 'src/components/chat-list.vue'
 </script>
 
 <style>
 #page {
   display: flex;
-
   height: 100vh;
   width: 100vw;
 }
@@ -76,10 +60,8 @@ export default {
 }
 
 #header-icons li {
-
   height: 48px;
   aspect-ratio: 1 / 1;
-
   border-radius: 1rem;
 }
 
@@ -90,69 +72,17 @@ export default {
 #chat-side {
   background-color: var(--color-10);
   padding: 1rem;
-
   width: 20rem;
-
   display: flex;
   flex-direction: column;
   gap: 1rem
 }
 
-.chat-one {
-  position: relative;
-
-  display: flex;
-  gap: 1rem;
-
-  height: fit-content;
-  padding: 12px 36px 12px 12px;
-  border-radius: 20px;
-
-  background: var(--color-20);
-  transition: background-color;
-
-  cursor: pointer;
-}
-
-.chat-one img {
-  border-radius: 999px;
-  width: 3rem;
-  height: 3rem;
-  aspect-ratio: 1/1;
-}
-
-.chat-one:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  pointer-events: none;
-  border: 1px solid hsla(0, 0%, 100%, .1);
-  -webkit-mask-image: linear-gradient(175deg, #000, transparent 55%);
-  mask-image: linear-gradient(175deg, #000, transparent 55%);
-  opacity: 0;
-  transition: opacity .2s;
-}
-
-.chat-one:hover:after {
-  opacity: 1;
-}
-
 #chat {
   height: 100%;
   padding: 1rem;
-
   display: flex;
   flex-direction: column-reverse;
   gap: 1rem;
-}
-
-.chat-message img {
-  border-radius: 999px;
-  min-width: 3rem;
-  min-height: 3rem;
-  max-width: 3rem;
-  max-height: 3rem;
-  aspect-ratio: 1/1;
 }
 </style>

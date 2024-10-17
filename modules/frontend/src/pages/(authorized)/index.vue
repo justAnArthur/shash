@@ -2,7 +2,7 @@
   <command-line />
 
   <div class="chat-message">
-    <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
+    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
     <div style="display: grid; gap: 0.5rem">
       <div style="display: flex; gap: 0.5rem; align-items: center">
         <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Arthur</h2>
@@ -17,7 +17,7 @@
   </div>
 
   <div class="chat-message">
-    <img src="https://xsgames.co/randomusers/avatar.php?g=female" alt="">
+    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=female" alt="">
     <div style="display: grid; gap: 0.5rem">
       <div style="display: flex; gap: 0.5rem; align-items: center">
         <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Anastasiia</h2>
