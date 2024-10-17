@@ -89,5 +89,5 @@
 </style>
 
 <script lang="ts" setup>
-import CommandLine from 'components/CommandLine.vue';
+import CommandLine from 'components/command-line.vue';
 </script>
