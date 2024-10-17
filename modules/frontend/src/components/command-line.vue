@@ -1,164 +1,143 @@
-<script lang="ts">
-// @ts-nocheck
-export default {
-  data() {
-    return {
-      inputValue: '',
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue';
 
-      selectedSuggestionIndex: null,
-      suggestions: [],
+const inputValue = ref('');
+const selectedSuggestionIndex = ref<number | null>(null);
+const suggestions = ref<{ text: string; onEnter?: () => void }[]>([]);
 
-      commands: [
-        {
-          slash: '/chat',
-          parameters: ['chatName'],
-          suggestions: async (chatName) => {
-            if (chatName === undefined)
-              return []
+const commands = [
+  {
+    slash: '/chat',
+    parameters: ['chatName'],
+    suggestions: async (chatName?: string) => {
+      if (chatName === undefined) return [];
 
-            function selectChat(chat) {
-              alert(`Chat ${chat.id} selected`)
-            }
+      const selectChat = (chat: { id: number }) => {
+        alert(`Chat ${chat.id} selected`);
+      };
 
-            return (await this.getChats(chatName))
-              .map(chat => ({
-                text: chat.channelName,
-                onEnter: () => selectChat(chat)
-              }))
-          }
-        },
-        {
-          slash: '/fckQuasar'
-
-        }
-      ]
-    }
+      return (await getChats(chatName)).map((chat: { channelName: string; id: number }) => ({
+        text: chat.channelName,
+        onEnter: () => selectChat(chat),
+      }));
+    },
   },
-  methods: {
-    getChats: async (query) => {
-      return new Promise((resolve) => setTimeout(() => resolve(
-        [...new Array(100)]
-          .map((_, index) => ({ id: index, channelName: `Channel ${index}` }))
-          .filter(chat => chat.channelName.includes(query))
-      ), 1000))
-    },
+  {
+    slash: '/fckQuasar',
+  },
+];
 
-    onInput() {
-      this.suggestions = []
+// Async function to fetch chats
+const getChats = async (query) => {
+  return new Promise<{ id: number; channelName: string }[]>((resolve) => {
+    setTimeout(() => {
+      const chats = [...new Array(100)]
+        .map((_, index) => ({ id: index, channelName: `Channel ${index}` }))
+        .filter((chat) => chat.channelName.includes(query));
+      resolve(chats);
+    }, 1000);
+  });
+};
 
-      if (!this.inputValue.startsWith('/')) {
-        return
-      }
+const onInput = () => {
+  suggestions.value = [];
 
-      const filteredCommand = this.commands.find(command => this.inputValue.startsWith(command.slash))
-
-      if (!filteredCommand) {
-        this.suggestions = this.commands.map(command => ({
-          text: command.slash,
-          onEnter: () => {
-            this.inputValue = command.slash + " "
-            this.onInput()
-          }
-        }))
-      }
-
-      const [_, ...parameters] = this.inputValue.split(' ')
-
-      filteredCommand?.suggestions?.(...parameters)
-        .then(suggestions => this.suggestions = suggestions)
-    },
-
-    // ---
-
-    scrollToActiveSuggestion() {
-      const activeItem = this.$el.querySelector('.is-active')
-      if (activeItem) {
-        activeItem.scrollIntoView({ block: 'center' })
-      }
-    },
-
-    onKeyDown() {
-      if (this.suggestions.length === 0)
-        return
-
-      if (this.selectedSuggestionIndex === null) {
-        this.selectedSuggestionIndex = this.suggestions.length - 1
-        return
-      }
-
-      if (this.selectedSuggestionIndex === this.suggestions.length - 1) {
-        this.selectedSuggestionIndex = 0
-        return
-      }
-
-      this.selectedSuggestionIndex++
-
-      this.scrollToActiveSuggestion()
-    },
-    onKeyUp() {
-      if (this.suggestions.length === 0)
-        return
-
-      if (this.selectedSuggestionIndex === null) {
-        this.selectedSuggestionIndex = 0
-        return
-      }
-
-      if (this.selectedSuggestionIndex === 0) {
-        this.selectedSuggestionIndex = this.suggestions.length - 1
-        return
-      }
-
-      this.selectedSuggestionIndex--
-
-      this.scrollToActiveSuggestion()
-    },
-    onKeyEnter() {
-      if (this.suggestions.length === 0)
-        return
-
-      const suggestion = this.suggestions[this.selectedSuggestionIndex || 0]
-      suggestion?.onEnter?.()
-
-      this.selectedSuggestionIndex = null
-      this.suggestions = []
-    }
+  if (!inputValue.value.startsWith('/')) {
+    return;
   }
-}
+
+  const filteredCommand = commands.find((command) => inputValue.value.startsWith(command.slash));
+
+  if (!filteredCommand) {
+    suggestions.value = commands.map((command) => ({
+      text: command.slash,
+      onEnter: () => {
+        inputValue.value = command.slash + ' ';
+        onInput();
+      },
+    }));
+    return;
+  }
+
+  const [, ...parameters] = inputValue.value.split(' ');
+
+  filteredCommand?.suggestions?.(...parameters).then((result) => {
+    suggestions.value = result;
+  });
+};
+
+const scrollToActiveSuggestion = () => {
+  const activeItem = document.querySelector('.is-active') as HTMLElement;
+  if (activeItem) {
+    activeItem.scrollIntoView({ block: 'center' });
+  }
+};
+
+const onKeyDown = () => {
+  if (suggestions.value.length === 0) return;
+
+  if (selectedSuggestionIndex.value === null) {
+    selectedSuggestionIndex.value = suggestions.value.length - 1;
+    return;
+  }
+
+  if (selectedSuggestionIndex.value === suggestions.value.length - 1) {
+    selectedSuggestionIndex.value = 0;
+    return;
+  }
+
+  selectedSuggestionIndex.value++;
+  scrollToActiveSuggestion();
+};
+
+const onKeyUp = () => {
+  if (suggestions.value.length === 0) return;
+
+  if (selectedSuggestionIndex.value === null) {
+    selectedSuggestionIndex.value = 0;
+    return;
+  }
+
+  if (selectedSuggestionIndex.value === 0) {
+    selectedSuggestionIndex.value = suggestions.value.length - 1;
+    return;
+  }
+
+  selectedSuggestionIndex.value--;
+  scrollToActiveSuggestion();
+};
+
+const onKeyEnter = () => {
+  if (suggestions.value.length === 0) return;
+
+  const suggestion = suggestions.value[selectedSuggestionIndex.value || 0];
+  suggestion?.onEnter?.();
+
+  selectedSuggestionIndex.value = null;
+  suggestions.value = [];
+};
 </script>
 
 <template>
   <div id="command-line-group">
     <div id="command-line-wrapper" style="display: flex">
-      <input
-        id="command-line"
-        v-model="inputValue"
-        @input="onInput"
-        @keydown.down.prevent="onKeyDown"
-        @keydown.up.prevent="onKeyUp"
-        @keydown.enter.prevent="onKeyEnter"
-        autocomplete="off"
-        placeholder="/"
-      />
+      <input id="command-line" v-model="inputValue" @input="onInput" @keydown.down.prevent="onKeyDown"
+        @keydown.up.prevent="onKeyUp" @keydown.enter.prevent="onKeyEnter" autocomplete="off" placeholder="/" />
 
       <button class="q-btn" style="aspect-ratio: 1/1">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="lucide lucide-send-horizontal">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-send-horizontal">
           <path
-            d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/>
-          <path d="M6 12h16"/>
+            d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
+          <path d="M6 12h16" />
         </svg>
       </button>
     </div>
     <div v-if="suggestions.length > 0" id="suggestions-popover">
       <ul id="suggestions-list">
-        <li
-          id="suggestions-item"
-          v-for="(suggestion, index) in suggestions"
-          :key="index"
-          :class="{ 'is-active': index == selectedSuggestionIndex }"
-        >
+        <li id="suggestions-item" v-for="(suggestion, index) in suggestions" :key="index"
+          :class="{ 'is-active': index == selectedSuggestionIndex }">
           {{ suggestion.text }}
         </li>
       </ul>
