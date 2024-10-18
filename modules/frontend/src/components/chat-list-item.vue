@@ -1,11 +1,13 @@
 <template>
   <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
   <div style="display: grid; gap: 0.5rem">
-    <h2 class="chat-name">{{ props.chatName }}</h2>
-    <div class="message-text">
-      {{ props.lastMessage.text }}
+    <div style="display:flex; gap: 0.5rem; align-items: center">
+      <h2 class="chat-name">{{ props.chatName }}</h2>
       <p class="message-time">{{ timeDisplay }}</p>
     </div>
+    <span class="message-text">
+      {{ props.lastMessage.text }}
+    </span>
   </div>
 </template>
 
@@ -45,21 +47,15 @@ const updateTime = () => {
   if (time < 60 * 1000) {
     setNextUpdate(60 * 1000)
     timeDisplay.value = "Now"
-  } else if (time < 2 * 60 * 1000) {
-    setNextUpdate(60 * 1000)
-    timeDisplay.value = "1 minute ago"
   } else if (time < 60 * 60 * 1000) {
     setNextUpdate(60 * 1000)
-    timeDisplay.value = `${Math.floor(time / (60 * 1000))} minutes ago`
-  } else if (time < 2 * 60 * 60 * 1000) {
-    setNextUpdate(30 * 60 * 1000)
-    timeDisplay.value = `${Math.floor(time / (60 * 60 * 1000))} hour ago`
+    timeDisplay.value = `${Math.floor(time / (60 * 1000))}m`
   } else if (time < 24 * 60 * 60 * 1000) {
     setNextUpdate(60 * 60 * 1000)
-    timeDisplay.value = new Date(props.lastMessage.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    timeDisplay.value = `${Math.floor(time / (60 * 60 * 1000))}h`
   } else if (time < 365 * 24 * 60 * 60 * 1000) {
     clearInterval(intervalId);
-    timeDisplay.value = new Date(props.lastMessage.time).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+    timeDisplay.value = new Date(props.lastMessage.time).toLocaleDateString([], { month: "short", day: "numeric" })
   } else {
     clearInterval(intervalId);
     timeDisplay.value = new Date(props.lastMessage.time).toLocaleDateString([], { year: "numeric", month: "short", day: "numeric" })
