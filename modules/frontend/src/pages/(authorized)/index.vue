@@ -94,7 +94,7 @@
   aspect-ratio: 1/1;
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1025px) {
   #close {
     display: none;
   }
@@ -103,4 +103,5 @@
 
 <script lang="ts" setup>
 import CommandLine from 'components/command-line.vue';
+// TODO: refactor mobile view chat header styles
 </script>
