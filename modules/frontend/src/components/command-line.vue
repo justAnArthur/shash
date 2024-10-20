@@ -23,7 +23,7 @@ const commands = [
     },
   },
   {
-    slash: '/fckQuasar',
+    slash: '/tellThx2Quasar',
   },
 ];
 

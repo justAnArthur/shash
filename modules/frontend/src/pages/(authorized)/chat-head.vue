@@ -24,14 +24,22 @@
         anchor="bottom left"
         self="top left"
         class="full-width-mobile"
+        max-width="20rem"
         style="background-color: transparent;"
       >
         <div id="chat-header-modal" class="row no-wrap q-pa-md">
-          <div class="column full-width">
-            <div class="text-h6 q-mb-md">Chat Settings</div>
-            <q-toggle color="grey" v-model="mobileData" label="Use Mobile Data"/>
-            <q-toggle color="grey" v-model="bluetooth" label="Bluetooth"/>
+          <div class="column full-width" style="gap: 0.5rem">
+            <h3 class="text-h6">
+              Chat Settings
+            </h3>
 
+            <q-btn>
+              Leave Chat
+            </q-btn>
+
+            <q-separator dark/>
+
+            <h4>Chat Members</h4>
             <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%;">
               <chat-member v-for="n in 6" :key="n"/>
             </div>
