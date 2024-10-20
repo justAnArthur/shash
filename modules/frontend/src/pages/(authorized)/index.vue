@@ -15,7 +15,7 @@
     />
 
     <chat-head
-      :channel-name="`Quasar is 💩 & Vue too`"
+      :channel-name="`Quasar is !best`"
     />
   </main>
 </template>
