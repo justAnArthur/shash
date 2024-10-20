@@ -1,17 +1,23 @@
 import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: "/",
-  //   component: () => import("layouts/MainLayout.vue"),
-  //   children: [{ path: "", component: () => import("pages/ChatPage.vue") }]
-  // },
-
   {
     path: "/",
     component: () => import("layouts/(authorized)/index.vue"),
     children: [
-      { path: "", component: () => import("pages/(authorized)/index.vue") },
+      {
+        path: "",
+        components: {
+          home: () => import("pages/(authorized)/index.vue"),
+          "chat-side": () => import("components/chat-list.vue"),
+        },
+      },
+      {
+        path: "/chats",
+        components: {
+          home: () => import("pages/chats/index.vue"),
+        },
+      },
     ],
   },
   {

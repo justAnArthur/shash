@@ -2,7 +2,7 @@
   <command-line />
 
   <div class="chat-message">
-    <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
+    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
     <div style="display: grid; gap: 0.5rem">
       <div style="display: flex; gap: 0.5rem; align-items: center">
         <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Arthur</h2>
@@ -17,7 +17,7 @@
   </div>
 
   <div class="chat-message">
-    <img src="https://xsgames.co/randomusers/avatar.php?g=female" alt="">
+    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=female" alt="">
     <div style="display: grid; gap: 0.5rem">
       <div style="display: flex; gap: 0.5rem; align-items: center">
         <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Anastasiia</h2>
@@ -36,7 +36,7 @@
 
     <h1 style="flex: 1 1 0">Quasar is shit & Vue too</h1>
 
-    <button class="q-btn" style="aspect-ratio: 1/1">
+    <button class="q-btn" style="aspect-ratio: 1/1;">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
         class="lucide lucide-ellipsis">
@@ -45,6 +45,13 @@
         <circle cx="5" cy="12" r="1" />
       </svg>
     </button>
+    <a class="q-btn" id="close" style="aspect-ratio: 1/1;" href="#/chats">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </a>
   </header>
 </template>
 
@@ -86,8 +93,15 @@
   max-height: 3rem;
   aspect-ratio: 1/1;
 }
+
+@media only screen and (min-width: 1025px) {
+  #close {
+    display: none;
+  }
+}
 </style>
 
 <script lang="ts" setup>
 import CommandLine from 'components/command-line.vue';
+// TODO: refactor mobile view chat header styles
 </script>

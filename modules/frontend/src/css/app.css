@@ -107,3 +107,12 @@ html {
   margin-bottom: 20px;
   width: 100%;
 }
+
+.avatar {
+  border-radius: 999px;
+  min-width: 3rem;
+  min-height: 3rem;
+  max-width: 3rem;
+  max-height: 3rem;
+  aspect-ratio: 1/1;
+}
