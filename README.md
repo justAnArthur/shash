@@ -1,13 +1,5 @@
 # slash
 
-The project for VPWA that might be written in Vue.js and Quasar + Adonis as back-end.
-
-### Getting Started
-
-```shell
-npm install
-```
-
 ```shell
 npm run dev
 ```
@@ -179,3 +171,4 @@ classDiagram
 ```
 
 #### Format / Lint Use Biome
+
