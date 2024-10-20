@@ -169,6 +169,3 @@ classDiagram
   Message "1" -- "1" User: sent by
   Message "1" -- "1" Chat: belongs to
 ```
-
-#### Format / Lint Use Biome
-
