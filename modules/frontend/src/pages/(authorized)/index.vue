@@ -34,7 +34,7 @@
   <header id="chat-header">
     <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
 
-    <h1 style="flex: 1 1 0">Quasar is shit & Vue too</h1>
+    <h1 style="flex: 1 1 0">Quasar is 💩 & Vue too</h1>
 
     <button class="q-btn" style="aspect-ratio: 1/1;">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
