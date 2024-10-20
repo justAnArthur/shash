@@ -12,7 +12,7 @@
 import { defineComponent, ref, provide } from 'vue'
 import ChatScreen from '../components/ChatScreen.vue'
 import ChatInput from '../components/ChatInput.vue'
-import ChatHeader from '../components/ChatHeader.vue'
+import ChatHeader from 'components/ChatHeader.vue'
 
 export default defineComponent({
   name: 'ChatPage',

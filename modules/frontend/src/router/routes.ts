@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -9,16 +9,22 @@ const routes: RouteRecordRaw[] = [
         path: "",
         components: {
           home: () => import("pages/(authorized)/index.vue"),
-          "chat-side": () => import("components/chat-list.vue"),
-        },
+          "chat-side": () => import("components/chat-list.vue")
+        }
       },
       {
         path: "/chats",
         components: {
-          home: () => import("pages/chats/index.vue"),
-        },
+          home: () => import("pages/(authorized)/chats/index.vue")
+        }
       },
-    ],
+      {
+        path: "/settings",
+        components: {
+          home: () => import("pages/(authorized)/settings/index.vue")
+        }
+      }
+    ]
   },
   {
     path: "/auth",
@@ -26,21 +32,21 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "register",
-        component: () => import("pages/(unauthorized)/register/index.vue"),
+        component: () => import("pages/(unauthorized)/register/index.vue")
       },
       {
         path: "login",
-        component: () => import("pages/(unauthorized)/login/index.vue"),
-      },
-    ],
+        component: () => import("pages/(unauthorized)/login/index.vue")
+      }
+    ]
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue"),
-  },
-];
+    component: () => import("pages/ErrorNotFound.vue")
+  }
+]
 
-export default routes;
+export default routes

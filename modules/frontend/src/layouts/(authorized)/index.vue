@@ -1,21 +1,21 @@
 <template>
-  <main id="page">
-    <navigation v-if="isWideEnough" />
-    <main class="chat" :class="{ 'column-direction': currentRoute.startsWith('/chats') }" style="flex: 1 1 0;">
-      <router-view name="home" />
+  <section id="page">
+    <navigation/>
+
+    <main style="padding: 1rem; flex: 1 1 0;">
+      <router-view name="home"/>
     </main>
 
     <aside v-if="isWideEnough" id="chat-side">
-      <router-view name="chat-side" />
+      <router-view name="chat-side"/>
     </aside>
-  </main>
+  </section>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Navigation from 'src/components/navigation.vue'
-import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const isWideEnough = ref(false)
 const route = useRoute()
@@ -48,6 +48,7 @@ onUnmounted(() => {
   display: flex;
   height: 100vh;
   width: 100vw;
+
 }
 
 #chat-side {
@@ -57,17 +58,5 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.chat {
-  height: 100%;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 1rem;
-}
-
-.column-direction {
-  flex-direction: column;
 }
 </style>
