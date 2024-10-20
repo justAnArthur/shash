@@ -1,58 +1,23 @@
 <template>
-  <command-line />
+  <main class="chat">
+    <command-line/>
 
-  <div class="chat-message">
-    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
-    <div style="display: grid; gap: 0.5rem">
-      <div style="display: flex; gap: 0.5rem; align-items: center">
-        <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Arthur</h2>
-        <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">09:22 AM</div>
-      </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-        ea commodo consequat.
-      </p>
-    </div>
-  </div>
+    <chat-message
+      :user="{name: 'Artem'}"
+      :created-at="new Date('2021-09-01T15:42:00')"
+      :content="`Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`"
+    />
 
-  <div class="chat-message">
-    <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=female" alt="">
-    <div style="display: grid; gap: 0.5rem">
-      <div style="display: flex; gap: 0.5rem; align-items: center">
-        <h2 style="font-weight: 600; line-height: 1; font-size: 16px">Anastasiia</h2>
-        <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">03:42 PM</div>
-      </div>
-      <p>
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
-    </div>
-  </div>
+    <chat-message
+      :user="{name: 'Artur '}"
+      :created-at="new Date('2021-09-01T15:42:00')"
+      :content="`Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`"
+    />
 
-  <header id="chat-header">
-    <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
-
-    <h1 style="flex: 1 1 0">Quasar is 💩 & Vue too</h1>
-
-    <button class="q-btn" style="aspect-ratio: 1/1;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        class="lucide lucide-ellipsis">
-        <circle cx="12" cy="12" r="1" />
-        <circle cx="19" cy="12" r="1" />
-        <circle cx="5" cy="12" r="1" />
-      </svg>
-    </button>
-    <a class="q-btn" id="close" style="aspect-ratio: 1/1;" href="#/chats">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
-        <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" />
-      </svg>
-    </a>
-  </header>
+    <chat-head
+      :channel-name="`Quasar is 💩 & Vue too`"
+    />
+  </main>
 </template>
 
 <style scoped>
@@ -66,17 +31,6 @@
   background: hsla(0, 0%, 97%, .05);
 
   color: hsla(0, 0%, 97%, .56);
-}
-
-#chat-header {
-  padding-left: 1rem;
-  padding-right: 1rem;
-
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-
-  margin-bottom: auto;
 }
 
 #chat-header h1 {
@@ -94,14 +48,17 @@
   aspect-ratio: 1/1;
 }
 
-@media only screen and (min-width: 1025px) {
-  #close {
-    display: none;
-  }
+.chat {
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
 }
 </style>
 
 <script lang="ts" setup>
-import CommandLine from 'components/command-line.vue';
+import CommandLine from 'components/command-line.vue'
+import ChatMessage from "pages/(authorized)/chat-message.vue"
+import ChatHead from "pages/(authorized)/chat-head.vue"
 // TODO: refactor mobile view chat header styles
 </script>

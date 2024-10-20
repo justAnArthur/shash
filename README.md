@@ -7,5 +7,3 @@ The project for VPWA (SHIT) that might be written in Vue.js and Quasar + Adonis 
 ```shell
 npm install
 ```
-
-#### Format / Lint Use Biome
