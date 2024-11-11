@@ -1,10 +1,11 @@
-interface Form {
+export interface Form {
   email: string;
   password: string;
 }
-interface RegForm extends Form {
-  username: string;
-  fullname: string;
+export interface RegForm extends Form {
+  nickname: string;
+  name: string;
+  surname: string;
 }
 interface Errors {
   [key: string]: string;
@@ -30,35 +31,25 @@ const validateUsername = (username: string): string => {
   }
   return "";
 };
-// name should be at least 3 characters long, have at least two words, can contain only letters
+// name should be at least 3 characters long, can contain only letters
 const validateName = (name: string): string => {
-  const errors: string[] = [];
-
-  // Check if the name contains at least two words
-  const words = name.trim().split(/\s+/);
-  if (words.length < 2) {
-    errors.push("Full name must have at least two words");
-  }
-
-  // Check if all words contain only letters (no digits or special characters)
-  const lettersOnly = /^[A-Za-z]+$/;
-  for (const word of words) {
-    if (!lettersOnly.test(word)) {
-      errors.push("Full name can only contain letters");
-    }
-  }
-  // Check if the name has at least 3 characters
   if (name.length < 3) {
-    errors.push("Full name must be at least 3 characters long");
+    return "Username must be at least 3 characters long";
   }
-  if (errors.length > 0) {
-    return errors.join("\n");
+  if (!/^[a-zA-Z]+$/.test(name)) {
+    return "Username can contain only letters, numbers, and underscores";
   }
   return "";
 };
 
 export const validateRegistration = (form: RegForm): Errors => {
-  if (!form.email || !form.password || !form.username || !form.fullname) {
+  if (
+    !form.email ||
+    !form.password ||
+    !form.nickname ||
+    !form.name ||
+    !form.surname
+  ) {
     return {
       global: "Please fill in all fields",
     };
@@ -66,8 +57,9 @@ export const validateRegistration = (form: RegForm): Errors => {
   const errors: Errors = {};
   errors["email"] = validateEmail(form.email);
   errors["password"] = validatePassword(form.password);
-  errors["username"] = validateUsername(form.username);
-  errors["fullname"] = validateName(form.fullname);
+  errors["nickname"] = validateUsername(form.nickname);
+  errors["name"] = validateName(form.name);
+  errors["surname"] = validateName(form.surname);
 
   return errors;
 };

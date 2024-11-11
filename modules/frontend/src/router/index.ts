@@ -5,6 +5,7 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from "vue-router";
+import { Cookies } from "quasar";
 import routes from "./routes";
 
 /*
@@ -32,6 +33,13 @@ export default route((/* { store, ssrContext } */) => {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
-
+  Router.beforeEach((to, from, next) => {
+    const token = Cookies.get("token") || localStorage.getItem("token");
+    if (to.matched.some((record) => record.meta.requiresAuth) && !token) {
+      next("/auth");
+    } else {
+      next();
+    }
+  });
   return Router;
 });

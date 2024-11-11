@@ -20,7 +20,7 @@ module.exports = configure((ctx) => ({
   // app boot file (/src/boot)
   // --> boot files are part of "main.js"
   // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-  boot: [],
+  boot: ["axios.ts"],
 
   // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
   css: ["destyle.css", "app.css"],
@@ -42,7 +42,6 @@ module.exports = configure((ctx) => ({
   // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
   build: {
     vueRouterMode: "hash", // available values: 'hash', 'history'
-
     // transpile: false,
     // publicPath: '/',
 
@@ -72,6 +71,16 @@ module.exports = configure((ctx) => ({
     },
     port: 8080,
     open: false, // opens browser window automatically
+    proxy: {
+      "/api": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          "^/api": "",
+        },
+      },
+    },
   },
 
   // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
