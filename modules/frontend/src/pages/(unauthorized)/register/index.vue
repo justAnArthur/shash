@@ -1,20 +1,24 @@
 <script lang="ts" setup>
+import { useAuth } from 'src/composables/useAuth';
 import { reactive, ref } from 'vue';
 import { validateRegistration } from 'src/utils/validators';
 const form = reactive({
   email: '',
-  username: '',
-  fullname: '',
+  nickname: '',
+  surname: '',
+  name: '',
   password: ''
 })
 const errors = reactive({
   email: '',
-  username: '',
-  fullname: '',
+  nickname: '',
+  surname: '',
+  name: '',
   password: '',
   global: ''
 })
-const onSubmit = () => {
+const { register }= useAuth();
+const onSubmit = async () => {
   const validationErrors = validateRegistration({ ...form })
   Object.keys(errors).forEach((key) => {
     errors[key] = validationErrors[key] || '';
@@ -22,9 +26,17 @@ const onSubmit = () => {
   if (Object.values(errors).some(error => error !== '')) {
     return
   }
-  setTimeout(() => {
-    window.location.href = '#/'
-  }, 1000)
+  try {
+      errors.global = '';
+      const success = await register({...form});
+    if (success) {
+      errors.global = 'Registered successfully';
+    } else {
+      errors.global = 'Registeration failed';
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 </script>
 
@@ -35,12 +47,16 @@ const onSubmit = () => {
     <div class="auth-error-message" v-if="errors.email">{{ errors.email }}</div>
   </div>
   <div class="input-wrapper">
-    <input class="q-input" type="text" required v-model="form.username" placeholder="Username" />
-    <div class="auth-error-message" v-if="errors.username">{{ errors.username }}</div>
+    <input class="q-input" type="text" required v-model="form.nickname" placeholder="Username" />
+    <div class="auth-error-message" v-if="errors.nickname">{{ errors.nickname }}</div>
   </div>
   <div class="input-wrapper">
-    <input class="q-input" type="text" required v-model="form.fullname" placeholder="Full name" />
-    <div class="auth-error-message" v-if="errors.fullname">{{ errors.fullname }}</div>
+    <input class="q-input" type="text" required v-model="form.name" placeholder="Name" />
+    <div class="auth-error-message" v-if="errors.name">{{ errors.name }}</div>
+  </div>
+  <div class="input-wrapper">
+    <input class="q-input" type="text" required v-model="form.surname" placeholder="Surname" />
+    <div class="auth-error-message" v-if="errors.surname">{{ errors.surname }}</div>
   </div>
   <div class="input-wrapper">
     <input class="q-input" type="password" required v-model="form.password" placeholder="Password" />
@@ -48,7 +64,7 @@ const onSubmit = () => {
   </div>
   <button class="q-btn" type="button" @click="onSubmit">Sign up</button>
   <div class="auth-error-message" v-if="errors.global">{{ errors.global }}</div>
-  <div class="auth-footer-text">Already have an account? <a href="#/auth/login">Sign in</a></div>
+  <div class="auth-footer-text">Already have an account? <a href="#/login">Sign in</a></div>
 </template>
 
 <style scoped>

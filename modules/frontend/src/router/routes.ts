@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from "vue-router"
+import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -7,46 +7,54 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
+        name: "Home",
         components: {
           home: () => import("pages/(authorized)/index.vue"),
-          "chat-side": () => import("components/chat-list.vue")
-        }
+          "chat-side": () => import("components/chat-list.vue"),
+        },
       },
       {
         path: "/chats",
+        name: "Chats",
         components: {
-          home: () => import("pages/(authorized)/chats/index.vue")
-        }
+          home: () => import("pages/(authorized)/chats/index.vue"),
+        },
       },
       {
         path: "/settings",
+        name: "Settings",
         components: {
-          home: () => import("pages/(authorized)/settings/index.vue")
-        }
-      }
-    ]
+          home: () => import("pages/(authorized)/settings/index.vue"),
+        },
+      },
+    ],
+    meta: { requiresAuth: true },
   },
   {
     path: "/auth",
     component: () => import("layouts/(unauthorized)/index.vue"),
     children: [
       {
-        path: "register",
-        component: () => import("pages/(unauthorized)/register/index.vue")
+        path: "",
+        redirect: "/login",
       },
       {
-        path: "login",
-        component: () => import("pages/(unauthorized)/login/index.vue")
-      }
-    ]
+        path: "/register",
+        name: "Register",
+        component: () => import("pages/(unauthorized)/register/index.vue"),
+      },
+      {
+        path: "/login",
+        name: "Login",
+        component: () => import("pages/(unauthorized)/login/index.vue"),
+      },
+    ],
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue")
-  }
-]
+    name: "NotFound",
+    component: () => import("pages/ErrorNotFound.vue"),
+  },
+];
 
-export default routes
+export default routes;
