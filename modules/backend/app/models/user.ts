@@ -3,21 +3,31 @@ import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, beforeCreate, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import type { HasMany, ManyToMany } from "@adonisjs/lucid/types/relations"
-import ChatInvite from "#models/chat-invite"
-import Message from "#models/message"
-import Chat from "#models/chat"
-import ChatKicker from "#models/chat-kicker"
-import ChatBan from "#models/chat-ban"
-import ChatKick from "#models/chat-kick"
-import { randomUUID } from "node:crypto"
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import ChatInvite from '#models/chat-invite'
+import Message from '#models/message'
+import Chat from '#models/chat'
+import ChatKicker from '#models/chat-kicker'
+import ChatBan from '#models/chat-ban'
+import ChatKick from '#models/chat-kick'
+import { randomUUID } from 'node:crypto'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
-  passwordColumnName: 'password'
+  passwordColumnName: 'password',
 })
 
 export default class User extends compose(BaseModel, AuthFinder) {
+  currentAccessToken?: AccessToken
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '30 days',
+    prefix: 'oat_',
+    table: 'auth_access_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 40,
+  })
+
   @column({ isPrimary: true })
   declare id: string
 
@@ -56,7 +66,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   // Chats owned by the user
   @hasMany(() => Chat, {
-    foreignKey: 'userOwnerId'
+    foreignKey: 'userOwnerId',
   })
   declare ownedChats: HasMany<typeof Chat>
 
@@ -64,7 +74,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @manyToMany(() => Chat, {
     pivotTable: 'user_chats',
     pivotForeignKey: 'user_id',
-    pivotRelatedForeignKey: 'chat_id'
+    pivotRelatedForeignKey: 'chat_id',
   })
   declare chats: ManyToMany<typeof Chat>
 
@@ -78,25 +88,23 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   // Kicks where the user is being kicked
   @hasMany(() => ChatKick, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare kicksReceived: HasMany<typeof ChatKick>
 
   // Kicks performed by the user
   @hasMany(() => ChatKicker, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare kicksPerformed: HasMany<typeof ChatKicker>
 
   // Bans where the user is banned
   @hasMany(() => ChatBan, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare bans: HasMany<typeof ChatBan>
 
   // ---
 
-  async run() {
-
-  }
+  async run() {}
 }
