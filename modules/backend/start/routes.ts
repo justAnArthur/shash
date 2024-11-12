@@ -28,6 +28,9 @@ router.group(() => {
       router.get('mine', [ChatController, 'mineChats'])
       router.post('join/:chat_id', [ChatController, 'joinChat'])
       router.put('create', [ChatController, 'createChat'])
+      router.post('invite', [ChatController, 'inviteToChat'])
+      router.get('invites', [ChatController, 'invitedChats'])
+      router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
     })
     .prefix('chat')
 
@@ -37,6 +40,13 @@ router.group(() => {
       router.get('byChat/:chat_id', [MessageController, 'byChat'])
     })
     .prefix('message')
+
+  const UserController = () => import('#controllers/user-controller')
+  router
+    .group(() => {
+      router.get('byQuery/:query', [UserController, 'queryUsers'])
+    })
+    .prefix('user')
 })
   .use(
     middleware.auth({

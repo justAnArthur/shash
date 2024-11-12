@@ -2,14 +2,20 @@
 import { ref } from 'vue'
 import { useRouter } from "vue-router"
 import { commands as _commands } from "src/app/components/command-line.commands"
+import { useAuth } from "src/lib/composables/useAuth"
+
+const props = defineProps<{
+  chat?: any
+}>()
 
 const router = useRouter()
+const auth = useAuth()
 
 const inputValue = ref('')
 const selectedSuggestionIndex = ref<number | null>(null)
 const suggestions = ref<{ text: string; onEnter?: () => void }[]>([])
 
-const commands = _commands({ router })
+const commands = _commands({ router, context: { chat: props.chat, userId: auth.user.value?.id } })
 
 const onInput = () => {
   suggestions.value = []

@@ -1,6 +1,9 @@
 <template>
   <main class="chat">
-    <command-line v-if="chat"/>
+    <command-line
+      v-if="chat"
+      :chat="chat"
+    />
 
     <chat-message
       v-for="message in messages"

@@ -2,7 +2,7 @@ import { api } from "boot/axios"
 import type { Router } from "vue-router"
 import { updateChatMine } from "src/app/components/chat-list.store"
 
-export const commands = ({ router }: { router: Router }) => [
+export const commands = ({ router, context: { chat, userId } }: { router: Router, context: any, userId: any }) => [
   {
     slash: '/join',
     parameters: ['chatName'],
@@ -43,6 +43,30 @@ export const commands = ({ router }: { router: Router }) => [
           await router.push('/chats/' + data.chat.id)
         }
       }]
+    }
+  },
+  {
+    slash: '/invite',
+    parameters: ['query'],
+    suggestions: async (query?: string) => {
+      if (!query || query.length < 5)
+        return [{
+          text: '/invite [user:{5,}]'
+        }]
+
+      return (await api.get('/user/byQuery/' + query).then(({ data }) => data))
+        .filter((user: any) => user.id !== userId)
+        .map((user: any) => {
+          return ({
+            text: user.name + ' ' + user.surname,
+            onEnter: async () => {
+              await api.post('/chat/invite', {
+                userId: user.id,
+                chatId: chat.id
+              })
+            }
+          })
+        })
     }
   }
 ]
