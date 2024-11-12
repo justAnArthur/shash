@@ -15,7 +15,7 @@
 
   <ul id="chat-list">
     <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage"/>
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"/>
     </li>
 
     <li v-if="!chatsMine || chatsMine.length === 0">No chats available</li>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import  CreateChatForm from "src/app/components/create-chat-form.vue"
+import CreateChatForm from "src/app/components/create-chat-form.vue"
 import { onMounted, ref } from "vue"
 import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
 import ChatListItem from "src/app/components/chat-list-item.vue"
@@ -84,9 +84,14 @@ export default {
   opacity: 1;
 }
 
-.chat-item:hover .three-dots,
-.three-dots.menu-visible {
+.chat-item:hover {
   opacity: 1;
+}
+
+#chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .chat-list-header {

@@ -4,19 +4,17 @@
     <div style="display:flex; gap: 0.5rem; align-items: center; justify-content: space-between">
       <div class="chat-info">
         <div style="display: flex; gap: 0.25rem; align-items: center">
+          <svg v-if="props.isPrivate" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="lucide lucide-lock">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
           <h2 class="chat-name">{{ props.chatName }}</h2>
           <div class="message-dot"/>
         </div>
         <p class="message-time">{{ timeDisplay }}</p>
-      </div>
-      <div class="q-btn three-dots" :class="{ 'menu-visible': menuVisible }">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="lucide lucide-log-out">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" x2="9" y1="12" y2="12"/>
-        </svg>
       </div>
     </div>
     <div class="last-message" v-if="props.lastMessage">
@@ -30,18 +28,13 @@
 
 <script setup lang="ts">
 import { defineProps, onBeforeUnmount, onMounted, ref } from 'vue'
-import { IMessage } from './models.ts'
+import { IMessage } from "src/app/components/models"
 
-const props = defineProps({
-  chatName: {
-    type: String,
-    required: true
-  },
-  lastMessage: {
-    type: IMessage,
-    required: true
-  }
-})
+const props = defineProps<{
+  chatName: string,
+  lastMessage: IMessage,
+  isPrivate?: boolean
+}>()
 
 const timeDisplay = ref('')
 const menuVisible = ref(false)
@@ -73,7 +66,7 @@ onBeforeUnmount(() => {
 
 const updateTime = () => {
   // Chat won't open without this line
-  if(!props.lastMessage) return;
+  if (!props.lastMessage) return
   const time = Date.now() - props.lastMessage.time
   if (time < 60 * 1000) {
     setNextUpdate(60 * 1000)

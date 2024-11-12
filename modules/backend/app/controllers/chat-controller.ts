@@ -2,6 +2,21 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Chat from "#models/chat"
 
 export default class ChatController {
+  async byId({ request, response }: HttpContext) {
+    try {
+      const chatId = request.param('chat_id')
+
+      const chat = await Chat.query()
+        .where('id', chatId)
+        .firstOrFail()
+
+      return response.ok(chat)
+    } catch (error) {
+      console.error(error)
+      return response.notFound()
+    }
+  }
+
   async publicChats({ request, response }: HttpContext) {
     try {
       const { search } = request.qs()
@@ -23,7 +38,6 @@ export default class ChatController {
   async mineChats({ auth, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
-
       const userChats = await Chat.query()
         .whereHas('users', (query) => {
           query.where('user_id', user.id)
@@ -55,13 +69,32 @@ export default class ChatController {
       const chatId = request.param('chat_id')
 
       const chat = await Chat.findOrFail(chatId)
-      console.log(chat, user)
       await chat.related('users').attach([user.id])
 
       return response.ok({ message: 'Successfully joined the chat' })
     } catch (error) {
       console.error(error)
       return response.internalServerError('Cannot join the chat')
+    }
+  }
+
+  async createChat({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const { chatName, isPrivate } = request.only(['chatName', 'isPrivate'])
+
+      const chat = await Chat.create({
+        channelName: chatName,
+        isPrivate: isPrivate,
+        userOwnerId: user.id
+      })
+
+      await chat.related('users').attach([user.id])
+
+      return response.created({ message: 'Chat created successfully', chat })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot create chat')
     }
   }
 }

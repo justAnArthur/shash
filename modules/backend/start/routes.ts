@@ -23,9 +23,11 @@ router.group(() => {
   const ChatController = () => import('#controllers/chat-controller')
   router
     .group(() => {
+      router.get('byId/:chat_id', [ChatController, 'byId'])
       router.get('public', [ChatController, 'publicChats'])
       router.get('mine', [ChatController, 'mineChats'])
-      router.put('join/:chat_id', [ChatController, 'joinChat'])
+      router.post('join/:chat_id', [ChatController, 'joinChat'])
+      router.put('create', [ChatController, 'createChat'])
     })
     .prefix('chat')
 
