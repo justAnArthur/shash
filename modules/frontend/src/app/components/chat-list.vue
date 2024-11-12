@@ -23,13 +23,14 @@
 </template>
 
 <script lang="ts">
+import  CreateChatForm from "src/app/components/create-chat-form.vue"
 import { onMounted, ref } from "vue"
 import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
 import ChatListItem from "src/app/components/chat-list-item.vue"
 import { useRouter } from "vue-router"
 
 export default {
-  components: { ChatListItem },
+  components: { ChatListItem, CreateChatForm },
   setup() {
     const isFormVisible = ref(false)
 

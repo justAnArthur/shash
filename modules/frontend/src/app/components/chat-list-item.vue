@@ -72,6 +72,8 @@ onBeforeUnmount(() => {
 })
 
 const updateTime = () => {
+  // Chat won't open without this line
+  if(!props.lastMessage) return;
   const time = Date.now() - props.lastMessage.time
   if (time < 60 * 1000) {
     setNextUpdate(60 * 1000)
