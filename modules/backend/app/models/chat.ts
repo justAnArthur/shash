@@ -1,4 +1,4 @@
-import { BaseModel, belongsTo, column, hasMany, manyToMany, beforeCreate  } from "@adonisjs/lucid/orm"
+import { BaseModel, beforeCreate, belongsTo, column, hasMany, manyToMany } from "@adonisjs/lucid/orm"
 import { DateTime } from "luxon"
 import type { BelongsTo, HasMany, ManyToMany } from "@adonisjs/lucid/types/relations"
 import ChatBan from "#models/chat-ban"

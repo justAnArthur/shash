@@ -1,0 +1,26 @@
+### Auth
+
+####
+POST http://localhost:3333/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "user3@user.user",
+  "password": "user3user3"
+}
+
+### Chats
+
+####
+GET http://localhost:3333/chat/public?search=shared
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer oat_Mg.LVVldUVDMEt1cHdERVIzYUY2ejd4TjdlT21UNVMza1NDSGo4Tm1QeDI0NjE5MjEwNTc
+
+####
+GET http://localhost:3333/chat/mine
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer oat_Mg.LVVldUVDMEt1cHdERVIzYUY2ejd4TjdlT21UNVMza1NDSGo4Tm1QeDI0NjE5MjEwNTc
+

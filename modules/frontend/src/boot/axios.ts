@@ -1,6 +1,5 @@
-// src/boot/axios.ts
-import { boot } from "quasar/wrappers";
-import axios, { AxiosInstance } from "axios";
+import { boot } from "quasar/wrappers"
+import axios, { AxiosInstance } from "axios"
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
@@ -10,38 +9,38 @@ declare module "@vue/runtime-core" {
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:3333",
-});
+  baseURL: "http://localhost:3333"
+})
 
 export default boot(({ app, router }) => {
   // Boot setup code
-  app.config.globalProperties.$axios = axios;
-  app.config.globalProperties.$api = api;
+  app.config.globalProperties.$axios = axios
+  app.config.globalProperties.$api = api
 
   api.interceptors.request.use(
-    (config) => {
-      const token = localStorage.getItem("token");
+    (config: any) => {
+      const token = localStorage.getItem("token")
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`
       }
-      return config;
+      return config
     },
-    (error) => Promise.reject(error),
-  );
+    (error: any) => Promise.reject(error)
+  )
 
   api.interceptors.response.use(
-    (response) => response,
-    async (error) => {
+    (response: any) => response,
+    async (error: any) => {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
         if (router) {
-          await router.push("/login");
+          await router.push("/login")
         }
       }
-      return Promise.reject(error);
-    },
-  );
-});
+      return Promise.reject(error)
+    }
+  )
+})
 
-export { axios, api };
+export { axios, api }
