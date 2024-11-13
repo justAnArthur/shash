@@ -44,9 +44,9 @@
     </div>
 
     <div class="last-message" v-if="props.lastMessage">
-      <p class="message-author">{{ props.lastMessage.author }}</p>
+      <p class="message-author">{{ props.lastMessage.user.nickname }}</p>
       <p class="message-text">
-        {{ props.lastMessage.text }}
+        {{ props.lastMessage.content }}
       </p>
     </div>
   </div>
@@ -102,8 +102,11 @@ onBeforeUnmount(() => {
 
 const updateTime = () => {
   // Chat won't open without this line
-  if (!props.lastMessage) return
-  const time = Date.now() - props.lastMessage.time
+  if (!props.lastMessage)
+    return
+
+  const time = Date.now() - new Date(props.lastMessage.createdAt).getTime()
+
   if (time < 60 * 1000) {
     setNextUpdate(60 * 1000)
     timeDisplay.value = "Now"
@@ -115,10 +118,10 @@ const updateTime = () => {
     timeDisplay.value = `${Math.floor(time / (60 * 60 * 1000))}h`
   } else if (time < 365 * 24 * 60 * 60 * 1000) {
     clearInterval(intervalId)
-    timeDisplay.value = new Date(props.lastMessage.time).toLocaleDateString([], { month: "short", day: "numeric" })
+    timeDisplay.value = new Date(props.lastMessage.createdAt).toLocaleDateString([], { month: "short", day: "numeric" })
   } else {
     clearInterval(intervalId)
-    timeDisplay.value = new Date(props.lastMessage.time).toLocaleDateString([], {
+    timeDisplay.value = new Date(props.lastMessage.createdAt).toLocaleDateString([], {
       year: "numeric",
       month: "short",
       day: "numeric"
@@ -205,5 +208,11 @@ const updateTime = () => {
 .message-author {
   font-size: 16px;
   font-weight: 400;
+}
+
+.last-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 </style>

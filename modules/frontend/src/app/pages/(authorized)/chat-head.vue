@@ -8,7 +8,7 @@
       </svg>
     </q-btn>
 
-    <h1 style="flex: 1 1 0">{{ channelName }}</h1>
+    <h1 style="flex: 1 1 0">{{ chat.channelName }}</h1>
 
     <q-btn style="aspect-ratio: 1/1">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -33,16 +33,20 @@
               Chat Settings
             </h3>
 
-            <q-btn>
+            <q-btn @click="leaveChat()">
               Leave Chat
             </q-btn>
 
-            <q-separator dark/>
+            <q-btn @click="destroyChat()">
+              Destroy Chat
+            </q-btn>
 
-            <h4>Chat Members</h4>
-            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%;">
-              <chat-member v-for="n in 6" :key="n"/>
-            </div>
+            <!--            <q-separator dark/>-->
+
+            <!--            <h4>Chat Members</h4>-->
+            <!--            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%;">-->
+            <!--              <chat-member v-for="n in 6" :key="n"/>-->
+            <!--            </div>-->
           </div>
         </div>
       </q-menu>
@@ -52,18 +56,18 @@
 
 <script>
 import ChatMember from "src/app/pages/(authorized)/chat-member.vue"
+import { useAuth } from "src/lib/composables/useAuth"
+import { api } from "boot/axios"
+import { updateChatMine } from "src/app/components/chat-list.store"
 
 export default {
   name: 'chat-head',
   components: { ChatMember },
 
   props: {
-    channelName: {
-      type: String,
+    chat: {
+      type: Object,
       required: true
-    },
-    isPrivate: {
-      type: Boolean
     }
   },
 
@@ -81,13 +85,30 @@ export default {
         color: 'green',
         position: 'top'
       })
+    },
+    leaveChat() {
+      api.post('/chat/leave/' + this.chat.id)
+        .then(() => {
+          updateChatMine()
+          this.$router.push({ path: '/' })
+        })
+    },
+    destroyChat() {
+      api.delete('/chat/destroy/' + this.chat.id)
+        .then(() => {
+          updateChatMine()
+          this.$router.push({ path: '/' })
+        })
     }
   },
 
   data() {
+    const auth = useAuth()
+
     return {
       menu: false,
       mobileData: false,
+      isAdmin: auth.user.value.id === this.chat.userOwnerId,
       bluetooth: false
     }
   }

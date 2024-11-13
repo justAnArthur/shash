@@ -35,6 +35,10 @@ router
         router.delete(':chat_id', [ChatController, 'deleteOrQuit'])
         router.get(':chat_id/users', [ChatController, 'getUsersByChat'])
         router.post('/revoke', [ChatController, 'revokeUser'])
+        router.post('leave/:chat_id', [ChatController, 'leaveChat'])
+        router.delete('destroy/:chat_id', [ChatController, 'destroyChat'])
+        router.post('kick', [ChatController, 'kickUser'])
+        router.post('kick/resolve', [ChatController, 'resolveKick'])
       })
       .prefix('chat')
 
@@ -55,7 +59,7 @@ router
   })
   .use(
     middleware.auth({
-      guards: ['api'],
+      guards: ['api']
     })
   )
 // This path exists only to show that deleteFunc actually deletes chats when they are older than 30 days.

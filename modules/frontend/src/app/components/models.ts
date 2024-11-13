@@ -1,6 +1,7 @@
 export interface IMessage {
-  text: String;
-  author: String;
-  time: EpochTimeStamp;
+  content: String;
+  userId: String;
+  user: any;
+  createdAt: EpochTimeStamp;
   id?: String;
 }
