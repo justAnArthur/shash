@@ -137,6 +137,36 @@ export const commands = ({
     },
   },
   {
+    slash: "/revoke",
+    parameters: ["query"],
+    suggestions: async (query?: string) => {
+      if (!query || query.length < 2)
+        return [
+          {
+            text: "/revoke [user:{2,}]",
+          },
+        ];
+
+      return (
+        await api
+          .get(`/chat/${chat.id}/users?query=` + query)
+          .then(({ data }) => data)
+      )
+        .filter((user: any) => user.id !== userId)
+        .map((user: any) => {
+          return {
+            text: user.name + " " + user.surname,
+            onEnter: async () => {
+              await api.post("/chat/revoke ", {
+                userId: user.id,
+                chatId: chat.id,
+              });
+            },
+          };
+        });
+    },
+  },
+  {
     slash: "/cancel",
     parameters: [],
     suggestions: async () => {

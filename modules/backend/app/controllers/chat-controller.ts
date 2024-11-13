@@ -186,4 +186,45 @@ export default class ChatController {
       return response.internalServerError('Cannot perform the action')
     }
   }
+  async getUsersByChat({ request, response }: HttpContext) {
+    try {
+      const chatId = request.param('chat_id')
+      const { query } = request.qs()
+
+      const chat = await Chat.findOrFail(chatId)
+
+      await chat.load('users', (usersQuery) => {
+        if (query) {
+          usersQuery.where('nickname', 'ilike', `%${query}%`)
+        }
+      })
+
+      return response.ok(chat.users)
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot retrieve users from the chat')
+    }
+  }
+  async revokeUser({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+
+      const { chatId, userId } = request.all()
+
+      const chat = await Chat.findOrFail(chatId)
+
+      if (chat.userOwnerId !== user.id) {
+        return response.badRequest({
+          message: 'Only chat owner can remove users from the chat',
+        })
+      }
+
+      await chat.related('users').detach([userId])
+
+      return response.ok({ message: 'User has been removed from the chat' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot remove user from the chat')
+    }
+  }
 }

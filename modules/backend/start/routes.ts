@@ -33,6 +33,8 @@ router
         router.get('invites', [ChatController, 'invitedChats'])
         router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
         router.delete(':chat_id', [ChatController, 'deleteOrQuit'])
+        router.get(':chat_id/users', [ChatController, 'getUsersByChat'])
+        router.post('/revoke', [ChatController, 'revokeUser'])
       })
       .prefix('chat')
 
