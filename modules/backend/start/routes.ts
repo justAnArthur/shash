@@ -34,7 +34,6 @@ router
         router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
         router.delete(':chat_id', [ChatController, 'deleteOrQuit'])
         router.get(':chat_id/users', [ChatController, 'getUsersByChat'])
-        router.post('/revoke', [ChatController, 'revokeUser'])
         router.post('leave/:chat_id', [ChatController, 'leaveChat'])
         router.delete('destroy/:chat_id', [ChatController, 'destroyChat'])
         router.post('kick', [ChatController, 'kickUser'])
@@ -54,6 +53,7 @@ router
     router
       .group(() => {
         router.get('byQuery/:query', [UserController, 'queryUsers'])
+        router.get('byChat/:chat_id', [UserController, 'getUsersByChatId'])
       })
       .prefix('user')
   })
@@ -62,7 +62,9 @@ router
       guards: ['api']
     })
   )
+
 // This path exists only to show that deleteFunc actually deletes chats when they are older than 30 days.
+// @ts-ignore
 import deleteFunc from './scheduler.ts'
 router.get('/delete-old-chats', async () => {
   deleteFunc()

@@ -44,7 +44,7 @@
 
                 <div
                   style="border-radius: 1rem; background-color: var(--color-10); display: flex; gap: 1rem; align-items: center;">
-                  <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=male" alt=""/>
+                  <img class="avatar" :src="`https://picsum.photos/seed/not/200/200`" alt=""/>
                   <p>Lorem impsum dolor...</p>
                 </div>
               </div>

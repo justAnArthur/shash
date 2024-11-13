@@ -1,5 +1,5 @@
 <template>
-  <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=pixel" alt="">
+  <img class="avatar" :src="`https://picsum.photos/seed/${props.chatName}/200/200`" :alt="props.chatName">
   <div style="display: grid; gap: 0.25rem; width:100%;">
     <div style="display:flex; gap: 0.5rem; align-items: center; justify-content: space-between">
       <div class="chat-info">

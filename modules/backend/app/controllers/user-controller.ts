@@ -26,4 +26,20 @@ export default class UserController {
       return response.internalServerError('Cannot retrieve users')
     }
   }
+
+  async getUsersByChatId({ request, response }: HttpContext) {
+    try {
+      const chatId = request.param('chat_id')
+
+      const users = await User.query()
+        .join('user_chats', 'users.id', 'user_chats.user_id')
+        .where('user_chats.chat_id', chatId)
+        .select('users.*')
+
+      return response.ok(users)
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot retrieve users for the chat')
+    }
+  }
 }

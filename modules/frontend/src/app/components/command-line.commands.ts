@@ -100,7 +100,7 @@ export const commands = ({ router, context: { chat, userId } }: { router: Router
       },
       visible: !!chat && (chat.isPrivate === false || chat.userOwnerId === userId)
     },
-    
+
     {
       slash: '/kick',
       parameters: ['query'],
@@ -150,7 +150,7 @@ export const commands = ({ router, context: { chat, userId } }: { router: Router
           })
       },
       visible: !!chat && chat.userOwnerId === userId
-    }
+    },
     {
     slash: "/revoke",
     parameters: ["query"],

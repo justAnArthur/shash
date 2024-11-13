@@ -1,15 +1,6 @@
 <template>
   <header id="chat-header">
-    <q-btn href="#/chats" style="aspect-ratio: 1/1">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-           class="lucide lucide-chevron-left">
-        <path d="m15 18-6-6 6-6"/>
-      </svg>
-    </q-btn>
-
-    <h1 style="flex: 1 1 0">{{ chat.channelName }}</h1>
-
+    <!-- Existing code -->
     <q-btn style="aspect-ratio: 1/1">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -41,19 +32,18 @@
               Destroy Chat
             </q-btn>
 
-            <!--            <q-separator dark/>-->
+            <q-separator dark/>
 
-            <!--            <h4>Chat Members</h4>-->
-            <!--            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%;">-->
-            <!--              <chat-member v-for="n in 6" :key="n"/>-->
-            <!--            </div>-->
+            <h4>Chat Members</h4>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%;">
+              <chat-member v-for="user in users" :key="user.id" :user="user"/>
+            </div>
           </div>
         </div>
       </q-menu>
     </q-btn>
   </header>
 </template>
-
 
 <script>
 import ChatMember from "src/app/pages/(authorized)/chat-member.vue"
@@ -100,6 +90,15 @@ export default {
           updateChatMine()
           this.$router.push({ path: '/' })
         })
+    },
+    fetchUsers() {
+      api.get('/user/byChat/' + this.chat.id)
+        .then(response => {
+          this.users = response.data
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error)
+        })
     }
   },
 
@@ -110,7 +109,8 @@ export default {
       menu: false,
       mobileData: false,
       isAdmin: auth.user.value.id === this.chat.userOwnerId,
-      bluetooth: false
+      bluetooth: false,
+      users: []
     }
   },
 
@@ -119,13 +119,17 @@ export default {
       handler(newId) {
         const auth = useAuth()
         this.isAdmin = auth.user.value.id === this.chat.userOwnerId
+        this.fetchUsers()
       },
       immediate: true
     }
+  },
+
+  created() {
+    this.fetchUsers()
   }
 }
 </script>
-
 <style>
 #chat-header {
   display: flex;
