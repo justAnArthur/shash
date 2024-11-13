@@ -11,10 +11,10 @@
     </div>
   </div>
 
-  <create-chat-form v-if="isFormVisible" :on-submit="toggleFormVisible" id="chat-create-form"/>
+  <create-chat-form v-if="isFormVisible" :onSubmit="toggleFormVisible" id="chat-create-form"/>
 
   <ul id="chat-list">
-    <li v-for="chat in invitesChat" :key="chat.id" class="chat-item" @click="acceptChatInvite(chat.id)">
+    <li v-for="chat in invitesChat" :key="chat.id" class="chat-item highlighted" @click="acceptChatInvite(chat.id)">
       <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"/>
     </li>
 
@@ -70,6 +70,10 @@ export default {
 </script>
 
 <style>
+.highlighted {
+  background-color: hsla(200, 100%, 60%, 0.5); /* Light blue highlight */
+  border: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
+}
 .chat-item {
   position: relative;
   display: flex;

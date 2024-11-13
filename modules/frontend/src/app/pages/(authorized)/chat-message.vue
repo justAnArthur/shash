@@ -41,7 +41,7 @@ const formattedTime = computed(() =>
 
 .highlighted {
   background-color: hsla(200, 100%, 60%, 0.5); /* Light blue highlight */
-  border-left: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
+  border: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
 }
 
 #chat-header h1 {
