@@ -11,9 +11,7 @@ export default class ChatController {
     try {
       const chatId = request.param('chat_id')
 
-      const chat = await Chat.query()
-        .where('id', chatId)
-        .firstOrFail()
+      const chat = await Chat.query().where('id', chatId).firstOrFail()
 
       return response.ok(chat)
     } catch (error) {
@@ -28,8 +26,7 @@ export default class ChatController {
 
       const query = Chat.query().where('is_private', false)
 
-      if (search)
-        query.where('channel_name', 'ilike', `%${search}%`)
+      if (search) query.where('channel_name', 'ilike', `%${search}%`)
 
       const publicChats = await query
 
@@ -51,17 +48,16 @@ export default class ChatController {
           query.orderBy('created_at', 'desc').limit(1).preload('user')
         })
 
-      const result = userChats.map(chat => {
+      const result = userChats.map((chat) => {
         const lastMessage = chat.messages[0] || null
         return {
           ...chat.serialize(),
-          lastMessage: lastMessage ? lastMessage.serialize() : null
+          lastMessage: lastMessage ? lastMessage.serialize() : null,
         }
       })
 
       return response.ok(result)
     } catch (error) {
-
       console.error(error)
       return response.internalServerError('Cannot retrieve user chats')
     }
@@ -102,7 +98,7 @@ export default class ChatController {
       const chat = await Chat.create({
         channelName: chatName,
         isPrivate: isPrivate,
-        userOwnerId: user.id
+        userOwnerId: user.id,
       })
 
       await chat.related('users').attach([user.id])
@@ -128,7 +124,7 @@ export default class ChatController {
         chatId: chat.id,
         userId: invitedUser.id,
         createdByUserId: user.id,
-        isAccepted: null
+        isAccepted: null,
       })
 
       return response.ok({ message: 'User invited to the chat successfully', invite })
@@ -148,7 +144,7 @@ export default class ChatController {
         .andWhere('is_accepted', null)
         .preload('chat')
 
-      const chats = invites.map(invite => invite.chat)
+      const chats = invites.map((invite) => invite.chat)
 
       return response.ok(chats)
     } catch (error) {
@@ -178,6 +174,50 @@ export default class ChatController {
     } catch (error) {
       console.error(error)
       return response.internalServerError('Cannot accept chat invite')
+    }
+  }
+
+  async deleteOrQuit({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const chatId = request.param('chat_id')
+      const { quit } = request.all()
+
+      const chat = await Chat.findOrFail(chatId)
+
+      // Check if the user is the owner of the chat
+      if (chat.userOwnerId === user.id) {
+        // If the user is the owner, delete the chat
+        await chat.delete()
+        return response.ok({ message: 'Chat deleted successfully' })
+      }
+      if (quit === 'true') return response.ok({ message: 'Cannot delete chat (not owner)' })
+      // If the user is not the owner, remove them from the chat
+      await chat.related('users').detach([user.id])
+
+      return response.ok({ message: 'Successfully quit the chat' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot perform the action')
+    }
+  }
+  async getUsersByChat({ request, response }: HttpContext) {
+    try {
+      const chatId = request.param('chat_id')
+      const { query } = request.qs()
+
+      const chat = await Chat.findOrFail(chatId)
+
+      await chat.load('users', (usersQuery) => {
+        if (query) {
+          usersQuery.where('nickname', 'ilike', `%${query}%`)
+        }
+      })
+
+      return response.ok(chat.users)
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot retrieve users from the chat')
     }
   }
 

@@ -10,25 +10,16 @@
     <button class="q-btn create-btn" type="button" @click="createChat">Create</button>
   </form>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from "vue-router"
-import { updateChatMine } from "src/app/components/chat-list.store"
-import { api } from "boot/axios"
-
-export default defineComponent({
-  props: {
-    onSubmit: {
-      type: Function,
-      required: true
-    }
-  },
-  setup(props) {
-    const router = useRouter()
-    const chatName = ref('')
-    const isPrivate = ref(false)
-
+<script setup lang="ts">
+  import { ref, defineProps } from 'vue'
+  import { updateChatMine } from "src/app/components/chat-list.store";
+  import { useRouter } from 'vue-router'
+  import { api } from "boot/axios";
+  const props = defineProps()
+  const router = useRouter()
+  const chatName = ref('')
+  const isPrivate = ref(false)
+  
     const createChat = async () => {
       try {
         const response = await api.put('/chat/create', { chatName: chatName.value, isPrivate: isPrivate.value })
@@ -40,14 +31,6 @@ export default defineComponent({
         console.error('Error creating chat:', error)
       }
     }
-
-    return {
-      createChat,
-      chatName,
-      isPrivate
-    }
-  }
-})
 </script>
 
 <style scoped>
@@ -86,19 +69,43 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer; /* Ensures the checkbox is clickable when the user clicks anywhere in the label */
 }
 
 .checkbox-label {
+  display: flex;
+  align-items: center;
   color: hsla(0, 0%, 100%, .56);
   font-size: 1rem;
+  cursor: pointer; /* Allow the label to be clicked too */
 }
 
 .input-checkbox {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   background-color: var(--color-20);
   border-radius: 4px;
   border: 1px solid var(--color-10);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Style when the checkbox is checked */
+.input-checkbox:checked {
+  background-color: var(--color-10);
+  border-color: var(--color-30);
+}
+
+.input-checkbox:checked::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 2px;
 }
 
 @media only screen and (max-width: 1024px) {
