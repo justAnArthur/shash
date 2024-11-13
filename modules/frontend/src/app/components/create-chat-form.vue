@@ -1,15 +1,38 @@
 <template>
   <form class="create-chat-form">
     <div class="input-group">
-      <input class="input-field" type="text" placeholder="Chat name" />
+      <input class="input-field" type="text" placeholder="Chat name" v-model="chatName" />
     </div>
     <div class="input-group-checkbox">
-      <label for="private" class="checkbox-label">Private</label>
-      <input class="input-checkbox" type="checkbox" name="private" value="private" id="private" />
+      <!-- Wrapping the label around the checkbox ensures the whole area is clickable -->
+      <label for="private" class="checkbox-label">
+        <input class="input-checkbox" type="checkbox" name="private" id="private" v-model="isPrivate"/>
+        Private
+      </label>
     </div>
     <button class="q-btn create-btn" type="button" @click="createChat">Create</button>
   </form>
 </template>
+
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { updateChatMine } from "src/app/components/chat-list.store";
+  import { useRouter } from 'vue-router'
+  import { api } from "boot/axios";
+  const router = useRouter()
+  const isPrivate = ref(false);
+  const chatName = ref("");
+  const createChat = async () => {
+    if(!chatName.value) return;
+    const { data } = await api.put("/chat/create", {
+      chatName:chatName.value,
+      isPrivate:isPrivate.value
+    });
+    await updateChatMine();
+    await router.push("/chats/" + data.chat.id);
+  }
+</script>
+
 <style scoped>
 /* TODO: checkbox style refactor */
 .create-chat-form {
@@ -46,19 +69,43 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer; /* Ensures the checkbox is clickable when the user clicks anywhere in the label */
 }
 
 .checkbox-label {
+  display: flex;
+  align-items: center;
   color: hsla(0, 0%, 100%, .56);
   font-size: 1rem;
+  cursor: pointer; /* Allow the label to be clicked too */
 }
 
 .input-checkbox {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   background-color: var(--color-20);
   border-radius: 4px;
   border: 1px solid var(--color-10);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Style when the checkbox is checked */
+.input-checkbox:checked {
+  background-color: var(--color-10);
+  border-color: var(--color-30);
+}
+
+.input-checkbox:checked::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 2px;
 }
 
 @media only screen and (max-width :1024px) {

@@ -19,7 +19,7 @@
     </li>
 
     <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"/>
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate" :chatId="chat.id"/>
     </li>
 
     <li v-if="!chatsMine || chatsMine.length === 0">No participating in chats</li>
