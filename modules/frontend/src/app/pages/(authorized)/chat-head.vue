@@ -37,7 +37,7 @@
               Leave Chat
             </q-btn>
 
-            <q-btn @click="destroyChat()">
+            <q-btn v-if="isAdmin" @click="destroyChat()">
               Destroy Chat
             </q-btn>
 
@@ -53,6 +53,7 @@
     </q-btn>
   </header>
 </template>
+
 
 <script>
 import ChatMember from "src/app/pages/(authorized)/chat-member.vue"
@@ -110,6 +111,16 @@ export default {
       mobileData: false,
       isAdmin: auth.user.value.id === this.chat.userOwnerId,
       bluetooth: false
+    }
+  },
+
+  watch: {
+    'chat.id': {
+      handler(newId) {
+        const auth = useAuth()
+        this.isAdmin = auth.user.value.id === this.chat.userOwnerId
+      },
+      immediate: true
     }
   }
 }

@@ -122,8 +122,5 @@ export const commands = ({ router, context: { chat, userId } }: { router: Router
       visible: !!chat && chat.userOwnerId === userId
     }
   ]
-    .filter(command => {
-      console.log('command.visible', command.visible, command)
-      return command.visible !== false
-    })
+    .filter(command => command.visible !== false)
 }
