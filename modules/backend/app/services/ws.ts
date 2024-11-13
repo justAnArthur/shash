@@ -33,21 +33,21 @@ class Ws {
         })
       })
 
-      // Handle chat messages
-      socket.on('chat:message', (data) => {
-        console.log('Message received: ', data)
-        // Broadcast to room including myself
+      //// Handle chat messages
+      //socket.on('chat:message', (data) => {
+      //  console.log('Message received: ', data)
+      //  // Broadcast to room including myself
+      //
+      //  this.io?.to(data.chatId).emit('chat:message', data)
+      //})
 
-        this.io?.to(data.chatId).emit('chat:message', data)
-      })
-
-      // Handle typing status
-      socket.on('user:typing', (data: { chatId: string; isTyping: boolean }) => {
-        socket.to(data.chatId).emit('user:typing', {
-          userId: socket.id,
-          isTyping: data.isTyping,
-        })
-      })
+      //// Handle typing status
+      //socket.on('user:typing', (data: { chatId: string; isTyping: boolean }) => {
+      //  socket.to(data.chatId).emit('user:typing', {
+      //    userId: socket.id,
+      //    isTyping: data.isTyping,
+      //  })
+      //})
 
       // Handle disconnection
       socket.on('disconnect', () => {

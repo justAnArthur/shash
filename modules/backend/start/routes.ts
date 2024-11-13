@@ -32,6 +32,7 @@ router
         router.post('invite', [ChatController, 'inviteToChat'])
         router.get('invites', [ChatController, 'invitedChats'])
         router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
+        router.delete(':chat_id', [ChatController, 'deleteOrQuit'])
       })
       .prefix('chat')
 
