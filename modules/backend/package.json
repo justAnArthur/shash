@@ -60,6 +60,7 @@
     "@adonisjs/session": "^7.5.0",
     "@vinejs/vine": "^2.1.0",
     "luxon": "^3.5.0",
+    "node-cron": "^3.0.3",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1"

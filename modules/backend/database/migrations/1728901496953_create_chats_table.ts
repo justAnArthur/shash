@@ -7,9 +7,14 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
 
-      table.uuid('user_owner_id').notNullable().references('id').inTable('users').onDelete('CASCADE')
+      table
+        .uuid('user_owner_id')
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
 
-      table.string('channel_name').notNullable()
+      table.string('channel_name').notNullable().unique()
       table.boolean('is_private').notNullable()
 
       table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
