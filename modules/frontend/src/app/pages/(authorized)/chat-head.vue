@@ -21,7 +21,7 @@
         <div id="chat-header-modal" class="row no-wrap q-pa-md">
           <div class="column full-width" style="gap: 0.5rem">
             <h3 class="text-h6">
-              Chat Settings
+              Chat "{{ chat.channelName }}" settings
             </h3>
 
             <q-btn @click="leaveChat()">

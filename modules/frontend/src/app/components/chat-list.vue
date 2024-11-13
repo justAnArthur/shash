@@ -14,12 +14,14 @@
   <create-chat-form v-if="isFormVisible" :onSubmit="toggleFormVisible" id="chat-create-form"/>
 
   <ul id="chat-list">
-    <li v-for="chat in invitesChat" :key="chat.id" class="chat-item highlighted" @click="acceptChatInvite(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"/>
+    <li v-for="chat in invitesChat" :key="chat.id" class="chat-item highlighted">
+      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"
+                      :accept-invite="() =>acceptChatInvite(chat.id)" :reject-invite="() =>rejectChatInvite(chat.id)"/>
     </li>
 
     <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate" :chatId="chat.id"/>
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"
+                      :chatId="chat.id"/>
     </li>
 
     <li v-if="!chatsMine || chatsMine.length === 0">No participating in chats</li>
@@ -61,10 +63,22 @@ export default {
     async function acceptChatInvite(chatId: string) {
       await api.post("/chat/invite/accept/" + chatId)
       invitesChats.value = invitesChats.value.filter(chat => chat.id !== chatId)
-      await updateChatMine()
     }
 
-    return { chatsMine, invitesChat: invitesChats, openChat, acceptChatInvite, isFormVisible, toggleFormVisible }
+    async function rejectChatInvite(chatId: string) {
+      await api.delete("/chat/invite/reject/" + chatId)
+      invitesChats.value = invitesChats.value.filter(chat => chat.id !== chatId)
+    }
+
+    return {
+      chatsMine,
+      invitesChat: invitesChats,
+      openChat,
+      acceptChatInvite,
+      rejectChatInvite,
+      isFormVisible,
+      toggleFormVisible
+    }
   }
 }
 </script>
@@ -74,6 +88,7 @@ export default {
   background-color: hsla(200, 100%, 60%, 0.5); /* Light blue highlight */
   border: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
 }
+
 .chat-item {
   position: relative;
   display: flex;

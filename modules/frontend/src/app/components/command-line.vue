@@ -6,7 +6,7 @@ import { useAuth } from "src/lib/composables/useAuth"
 
 const props = defineProps<{
   chat?: any
-  sendMessage?: any
+  sendMessage?: any,
 }>()
 
 const router = useRouter()
@@ -86,15 +86,19 @@ const onKeyUp = () => {
   scrollToActiveSuggestion()
 }
 
-const onKeyEnter = () => {
-  if (props.chat && !inputValue.value.startsWith("/")){
+const onKeyEnter = async () => {
+  if (props.chat && !inputValue.value.startsWith("/")) {
     props.sendMessage(inputValue.value)
-    inputValue.value=''
+    inputValue.value = ''
   }
   if (suggestions.value.length === 0) return
 
   const suggestion = suggestions.value[selectedSuggestionIndex.value || 0]
-  suggestion?.onEnter?.()
+  const { clear } = await suggestion?.onEnter?.()
+  // if (clear)
+  //   inputValue.value = ''
+
+
 
   selectedSuggestionIndex.value = null
   suggestions.value = []

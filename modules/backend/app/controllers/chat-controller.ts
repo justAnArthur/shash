@@ -52,7 +52,7 @@ export default class ChatController {
         const lastMessage = chat.messages[0] || null
         return {
           ...chat.serialize(),
-          lastMessage: lastMessage ? lastMessage.serialize() : null,
+          lastMessage: lastMessage ? lastMessage.serialize() : null
         }
       })
 
@@ -98,7 +98,7 @@ export default class ChatController {
       const chat = await Chat.create({
         channelName: chatName,
         isPrivate: isPrivate,
-        userOwnerId: user.id,
+        userOwnerId: user.id
       })
 
       await chat.related('users').attach([user.id])
@@ -124,7 +124,7 @@ export default class ChatController {
         chatId: chat.id,
         userId: invitedUser.id,
         createdByUserId: user.id,
-        isAccepted: null,
+        isAccepted: null
       })
 
       return response.ok({ message: 'User invited to the chat successfully', invite })
@@ -177,6 +177,28 @@ export default class ChatController {
     }
   }
 
+  async rejectChatInvite({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const chatId = request.param('chat_id')
+
+      const invite = await ChatInvite.query()
+        .where('chat_id', chatId)
+        .andWhere('user_id', user.id)
+        // @ts-ignore
+        .andWhere('is_accepted', null)
+        .firstOrFail()
+
+      invite.isAccepted = false
+      await invite.save()
+
+      return response.ok({ message: 'Chat invite rejected successfully' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot reject chat invite')
+    }
+  }
+
   async deleteOrQuit({ auth, request, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
@@ -185,9 +207,7 @@ export default class ChatController {
 
       const chat = await Chat.findOrFail(chatId)
 
-      // Check if the user is the owner of the chat
       if (chat.userOwnerId === user.id) {
-        // If the user is the owner, delete the chat
         await chat.delete()
         return response.ok({ message: 'Chat deleted successfully' })
       }
@@ -201,6 +221,7 @@ export default class ChatController {
       return response.internalServerError('Cannot perform the action')
     }
   }
+
   async getUsersByChat({ request, response }: HttpContext) {
     try {
       const chatId = request.param('chat_id')
@@ -220,6 +241,7 @@ export default class ChatController {
       return response.internalServerError('Cannot retrieve users from the chat')
     }
   }
+
   async revokeUser({ auth, request, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
@@ -230,7 +252,7 @@ export default class ChatController {
 
       if (chat.userOwnerId !== user.id) {
         return response.badRequest({
-          message: 'Only chat owner can remove users from the chat',
+          message: 'Only chat owner can remove users from the chat'
         })
       }
 
@@ -242,6 +264,7 @@ export default class ChatController {
       return response.internalServerError('Cannot remove user from the chat')
     }
   }
+
   async leaveChat({ auth, request, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
@@ -301,13 +324,13 @@ export default class ChatController {
           userId: kickingUserId,
           chatId,
           isClosed: false,
-          isResolved: false,
+          isResolved: false
         })
       }
 
       await ChatKicker.create({
         chatKickId: chatKick.id,
-        userId: user.id,
+        userId: user.id
       })
 
       if (chat.userOwnerId === user.id) {
@@ -388,7 +411,7 @@ export default class ChatController {
     await Message.create({
       chatId: chat.id,
       userId: chat.userOwnerId,
-      content: `User with ID ${userId} was removed from the chat.`,
+      content: `User with ID ${userId} was removed from the chat.`
     })
   }
 }

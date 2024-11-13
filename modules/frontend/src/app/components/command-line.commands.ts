@@ -1,11 +1,11 @@
-import { api } from "boot/axios";
-import type { Router } from "vue-router";
-import { updateChatMine } from "src/app/components/chat-list.store";
+import { api } from "boot/axios"
+import type { Router } from "vue-router"
+import { updateChatMine } from "src/app/components/chat-list.store"
 
 export const commands = ({
-  router,
-  context: { chat, userId },
-}: {
+                           router,
+                           context: { chat, userId }
+                         }: {
   router: Router;
   context: any;
 }) => {
@@ -18,31 +18,31 @@ export const commands = ({
         if (chatName === undefined) {
           return [
             {
-              text: "/join [chatName] [private]",
-            },
-          ];
+              text: "/join [chatName] [private]"
+            }
+          ]
         }
 
         if (privatePublic === undefined) {
-          privatePublic = "public"; // Default to "public" if not provided
+          privatePublic = "public" // Default to "public" if not provided
         }
 
         // Check if the provided privatePublic is "private" or "public"
         if (privatePublic !== "private" && privatePublic !== "public") {
           return [
             {
-              text: "/join [chatName] [private]",
-            },
-          ];
+              text: "/join [chatName] [private]"
+            }
+          ]
         }
 
         // Check if the chat exists
         const { data: chats } = await api.get(
-          "/chat/public?search=" + chatName,
-        );
+          "/chat/public?search=" + chatName
+        )
 
         if (chats.length > 0) {
-          const existingChat = chats[0];
+          const existingChat = chats[0]
 
           // If the chat exists and is public, join it
           if (!existingChat.isPrivate) {
@@ -50,38 +50,40 @@ export const commands = ({
               {
                 text: `Join ${existingChat.channelName}`,
                 onEnter: async () => {
-                  await api.post("/chat/join/" + existingChat.id);
-                  await updateChatMine();
-                },
-              },
-            ];
+                  await api.post("/chat/join/" + existingChat.id)
+                  await updateChatMine()
+                  return ({ clear: true })
+                }
+              }
+            ]
           }
 
           // If the chat exists and is private, ignore it (no action)
           return [
             {
-              text: `Chat ${existingChat.channelName} is private. No action taken.`,
-            },
-          ];
+              text: `Chat ${existingChat.channelName} is private. No action taken.`
+            }
+          ]
         }
 
         // If chat doesn't exist, create a private or public chat based on privatePublic
-        const isPrivate = privatePublic === "private";
+        const isPrivate = privatePublic === "private"
         return [
           {
             text: `Create ${chatName} as ${privatePublic} channel`,
             onEnter: async () => {
               const { data } = await api.put("/chat/create", {
                 chatName,
-                isPrivate,
-              });
-              await updateChatMine();
-              await router.push("/chats/" + data.chat.id);
-            },
-          },
-        ];
+                isPrivate
+              })
+              await updateChatMine()
+              await router.push("/chats/" + data.chat.id)
+              return ({ clear: true })
+            }
+          }
+        ]
       },
-      visible: true,
+      visible: true
     },
     {
       slash: "/invite",
@@ -90,9 +92,9 @@ export const commands = ({
         if (!query || query.length < 5)
           return [
             {
-              text: "/invite [user:{5,}]",
-            },
-          ];
+              text: "/invite [user:{5,}]"
+            }
+          ]
 
         return (
           await api.get("/user/byQuery/" + query).then(({ data }) => data)
@@ -104,14 +106,15 @@ export const commands = ({
               onEnter: async () => {
                 await api.post("/chat/invite", {
                   userId: user.id,
-                  chatId: chat.id,
-                });
-              },
-            };
-          });
+                  chatId: chat.id
+                })
+                return ({ clear: true })
+              }
+            }
+          })
       },
       visible:
-        !!chat && (chat.isPrivate === false || chat.userOwnerId === userId),
+        !!chat && (chat.isPrivate === false || chat.userOwnerId === userId)
     },
     {
       slash: "/kick",
@@ -120,9 +123,9 @@ export const commands = ({
         if (!query || query.length < 5)
           return [
             {
-              text: "/kick [user:{5,}]",
-            },
-          ];
+              text: "/kick [user:{5,}]"
+            }
+          ]
 
         return (
           await api.get("/user/byQuery/" + query).then(({ data }) => data)
@@ -134,13 +137,14 @@ export const commands = ({
               onEnter: async () => {
                 await api.post("/chat/kick", {
                   userId: user.id,
-                  chatId: chat.id,
-                });
-              },
-            };
-          });
+                  chatId: chat.id
+                })
+                return ({ clear: true })
+              }
+            }
+          })
       },
-      visible: !!chat,
+      visible: !!chat
     },
     {
       slash: "/resolve",
@@ -149,9 +153,9 @@ export const commands = ({
         if (!query || query.length < 5)
           return [
             {
-              text: "/resolve [user:{5,}]",
-            },
-          ];
+              text: "/resolve [user:{5,}]"
+            }
+          ]
 
         return (
           await api.get("/user/byQuery/" + query).then(({ data }) => data)
@@ -163,13 +167,14 @@ export const commands = ({
               onEnter: async () => {
                 await api.post("/chat/kick/resolve", {
                   userId: user.id,
-                  chatId: chat.id,
-                });
-              },
-            };
-          });
+                  chatId: chat.id
+                })
+                return ({ clear: true })
+              }
+            }
+          })
       },
-      visible: !!chat && chat.userOwnerId === userId,
+      visible: !!chat && chat.userOwnerId === userId
     },
     {
       slash: "/revoke",
@@ -178,9 +183,9 @@ export const commands = ({
         if (!query || query.length < 2)
           return [
             {
-              text: "/revoke [user:{2,}]",
-            },
-          ];
+              text: "/revoke [user:{2,}]"
+            }
+          ]
 
         return (
           await api
@@ -194,13 +199,14 @@ export const commands = ({
               onEnter: async () => {
                 await api.post("/chat/revoke ", {
                   userId: user.id,
-                  chatId: chat.id,
-                });
-              },
-            };
-          });
+                  chatId: chat.id
+                })
+                return ({ clear: true })
+              }
+            }
+          })
       },
-      visible: !!chat && chat.userOwnerId === userId,
+      visible: !!chat && chat.userOwnerId === userId
     },
     {
       slash: "/cancel",
@@ -210,15 +216,15 @@ export const commands = ({
           {
             text: "Delete or quit chat",
             onEnter: async () => {
-              // Send a cancel request for the selected chat
-              await api.delete(`/chat/${chat.id}?quit=false`);
-              await updateChatMine();
-              await router.push("/chats/");
-            },
-          },
-        ];
+              await api.delete(`/chat/${chat.id}?quit=false`)
+              await updateChatMine()
+              await router.push("/chats/")
+              return ({ clear: true })
+            }
+          }
+        ]
       },
-      visible: !!chat,
+      visible: !!chat
     },
     {
       slash: "/quit",
@@ -229,17 +235,15 @@ export const commands = ({
             text: "Delete chat (chat owner only)",
             onEnter: async () => {
               // Send a cancel request for the selected chat
-              await api.delete(`/chat/${chat.id}?quit=true`);
-              await updateChatMine();
-              await router.push("/chats/");
-            },
-          },
-        ];
+              await api.delete(`/chat/${chat.id}?quit=true`)
+              await updateChatMine()
+              await router.push("/chats/")
+              return ({ clear: true })
+            }
+          }
+        ]
       },
-      visible: !!chat && chat.userOwnerId === userId,
-    },
-  ].filter((command) => {
-    console.log("command.visible", command.visible, command);
-    return command.visible !== false;
-  });
-};
+      visible: !!chat && chat.userOwnerId === userId
+    }
+  ].filter((command) => command.visible !== false)
+}
