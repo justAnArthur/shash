@@ -34,6 +34,8 @@ router
         router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
         router.post('leave/:chat_id', [ChatController, 'leaveChat'])
         router.delete('destroy/:chat_id', [ChatController, 'destroyChat'])
+        router.post('kick', [ChatController, 'kickUser'])
+        router.post('kick/resolve', [ChatController, 'resolveKick'])
       })
       .prefix('chat')
 

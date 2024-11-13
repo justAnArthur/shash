@@ -23,6 +23,9 @@ export default class ChatKick extends BaseModel {
   @column()
   declare isClosed: boolean
 
+  @column()
+  declare isResolved: boolean
+
   // Relationships
 
   @belongsTo(() => Chat)

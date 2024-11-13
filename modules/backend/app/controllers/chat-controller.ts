@@ -2,6 +2,9 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Chat from "#models/chat"
 import ChatInvite from "#models/chat-invite"
 import User from "#models/user"
+import ChatKick from "#models/chat-kick"
+import Message from "#models/message"
+import ChatKicker from "#models/chat-kicker"
 
 export default class ChatController {
   async byId({ request, response }: HttpContext) {
@@ -67,10 +70,21 @@ export default class ChatController {
   async joinChat({ auth, request, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
-
       const chatId = request.param('chat_id')
 
       const chat = await Chat.findOrFail(chatId)
+
+      const kick = await ChatKick.query()
+        .where('chat_id', chatId)
+        .andWhere('user_id', user.id)
+        .andWhere('is_closed', true)
+        .andWhere('is_resolved', false)
+        .first()
+
+      if (kick) {
+        return response.forbidden({ message: 'You have been kicked from this chat' })
+      }
+
       await chat.related('users').attach([user.id])
 
       return response.ok({ message: 'Successfully joined the chat' })
@@ -206,5 +220,114 @@ export default class ChatController {
       console.error(error)
       return response.internalServerError('Cannot delete chat')
     }
+  }
+
+  async kickUser({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const { chatId, userId: kickingUserId } = request.only(['chatId', 'userId'])
+
+      const chat = await Chat.findOrFail(chatId)
+
+      let chatKick = await ChatKick.query()
+        .where('chat_id', chatId)
+        .andWhere('user_id', kickingUserId)
+        .andWhere('is_closed', false)
+        .first()
+
+      if (!chatKick) {
+        chatKick = await ChatKick.create({
+          userId: kickingUserId,
+          chatId,
+          isClosed: false,
+          isResolved: false
+        })
+      }
+
+      await ChatKicker.create({
+        chatKickId: chatKick.id,
+        userId: user.id
+      })
+
+      if (chat.userOwnerId === user.id) {
+        await this.kickRemoveUserFromChat(chat, kickingUserId)
+        await ChatKick.query()
+          .where('chat_id', chatId)
+          .andWhere('user_id', kickingUserId)
+          .andWhere('is_closed', false)
+          .update({ isClosed: true })
+        return response.ok({ message: 'User kicked from the chat by owner' })
+      }
+
+      const kickCount = await ChatKicker.query()
+        .where('chat_kick_id', chatKick.id)
+        .count('* as total')
+
+      // @ts-ignore
+      if (kickCount[0].total >= 3) {
+        await this.kickRemoveUserFromChat(chat, kickingUserId)
+        await ChatKick.query()
+          .where('chat_id', chatId)
+          .andWhere('user_id', kickingUserId)
+          .andWhere('is_closed', false)
+          .update({ isClosed: true })
+        return response.ok({ message: 'User kicked from the chat by votes' })
+      }
+
+      return response.ok({ message: 'Kick vote registered' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot kick user from the chat')
+    }
+  }
+
+  async resolveKick({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const { chatId, userId } = request.only(['chatId', 'userId'])
+
+      const chat = await Chat.findOrFail(chatId)
+
+      if (chat.userOwnerId !== user.id) {
+        return response.forbidden({ message: 'Only the chat owner can resolve kicks' })
+      }
+
+      const kicks = await ChatKick.query()
+        .where('chat_id', chatId)
+        .andWhere('user_id', userId)
+        .andWhere('is_closed', true)
+        .andWhere('is_resolved', false)
+
+      if (kicks.length === 0) {
+        return response.notFound({ message: 'No active kicks found for this user in the chat' })
+      }
+
+      for (const kick of kicks) {
+        kick.isResolved = true
+        kick.isClosed = true
+        await kick.save()
+      }
+
+      return response.ok({ message: 'All kicks resolved successfully' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot resolve kicks')
+    }
+  }
+
+  private async kickRemoveUserFromChat(chat: Chat, userId: string) {
+    await chat.related('users').detach([userId])
+
+    await ChatKick.query()
+      .where('chat_id', chat.id)
+      .andWhere('user_id', userId)
+      .andWhere('is_closed', false)
+      .update({ isClosed: true })
+
+    await Message.create({
+      chatId: chat.id,
+      userId: chat.userOwnerId,
+      content: `User with ID ${userId} was removed from the chat.`
+    })
   }
 }

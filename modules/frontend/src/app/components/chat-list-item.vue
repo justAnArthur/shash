@@ -203,7 +203,7 @@ const updateTime = () => {
 
 .last-message {
   display: flex;
+  flex-direction: column;
   gap: 0.25rem;
-  align-items: center;
 }
 </style>
