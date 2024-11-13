@@ -6,6 +6,7 @@ import { useAuth } from "src/lib/composables/useAuth"
 
 const props = defineProps<{
   chat?: any
+  sendMessage?: any
 }>()
 
 const router = useRouter()
@@ -86,6 +87,10 @@ const onKeyUp = () => {
 }
 
 const onKeyEnter = () => {
+  if (props.chat && !inputValue.value.startsWith("/")){
+    props.sendMessage(inputValue.value)
+    inputValue.value=''
+  }
   if (suggestions.value.length === 0) return
 
   const suggestion = suggestions.value[selectedSuggestionIndex.value || 0]
