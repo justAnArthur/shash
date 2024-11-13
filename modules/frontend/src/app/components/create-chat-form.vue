@@ -15,13 +15,16 @@
   import { updateChatMine } from "src/app/components/chat-list.store";
   import { useRouter } from 'vue-router'
   import { api } from "boot/axios";
-  const props = defineProps()
+  const props = defineProps<{
+    onSubmit: Function;
+  }>()
   const router = useRouter()
   const chatName = ref('')
   const isPrivate = ref(false)
-  
+
     const createChat = async () => {
       try {
+        console.log(props)
         const response = await api.put('/chat/create', { chatName: chatName.value, isPrivate: isPrivate.value })
         props.onSubmit(response.data)
         updateChatMine()
