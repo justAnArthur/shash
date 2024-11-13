@@ -1,10 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Chat from "#models/chat"
-import ChatInvite from "#models/chat-invite"
-import User from "#models/user"
-import ChatKick from "#models/chat-kick"
-import Message from "#models/message"
-import ChatKicker from "#models/chat-kicker"
+import Chat from '#models/chat'
+import ChatInvite from '#models/chat-invite'
+import User from '#models/user'
+import ChatKick from '#models/chat-kick'
+import Message from '#models/message'
+import ChatKicker from '#models/chat-kicker'
 
 export default class ChatController {
   async byId({ request, response }: HttpContext) {
@@ -220,7 +220,28 @@ export default class ChatController {
       return response.internalServerError('Cannot retrieve users from the chat')
     }
   }
+  async revokeUser({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
 
+      const { chatId, userId } = request.all()
+
+      const chat = await Chat.findOrFail(chatId)
+
+      if (chat.userOwnerId !== user.id) {
+        return response.badRequest({
+          message: 'Only chat owner can remove users from the chat',
+        })
+      }
+
+      await chat.related('users').detach([userId])
+
+      return response.ok({ message: 'User has been removed from the chat' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot remove user from the chat')
+    }
+  }
   async leaveChat({ auth, request, response }: HttpContext) {
     try {
       const user = await auth.authenticate()
@@ -280,13 +301,13 @@ export default class ChatController {
           userId: kickingUserId,
           chatId,
           isClosed: false,
-          isResolved: false
+          isResolved: false,
         })
       }
 
       await ChatKicker.create({
         chatKickId: chatKick.id,
-        userId: user.id
+        userId: user.id,
       })
 
       if (chat.userOwnerId === user.id) {
@@ -367,7 +388,7 @@ export default class ChatController {
     await Message.create({
       chatId: chat.id,
       userId: chat.userOwnerId,
-      content: `User with ID ${userId} was removed from the chat.`
+      content: `User with ID ${userId} was removed from the chat.`,
     })
   }
 }
