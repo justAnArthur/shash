@@ -56,3 +56,8 @@ router
       guards: ['api'],
     })
   )
+// This path exists only to show that deleteFunc actually deletes chats when they are older than 30 days.
+import deleteFunc from './scheduler.ts'
+router.get('/delete-old-chats', async () => {
+  deleteFunc()
+})
