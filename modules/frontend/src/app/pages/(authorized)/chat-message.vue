@@ -1,9 +1,9 @@
 <template>
-  <div class="chat-message">
+  <div :class="['chat-message', { 'highlighted': isHighlighted }]">
     <img class="avatar" src="https://xsgames.co/randomusers/avatar.php?g=male" alt="">
     <div style="display: grid; gap: 0.5rem">
       <div style="display: flex; gap: 0.5rem; align-items: center">
-        <h2 style="font-weight: 600; line-height: 1; font-size: 16px">{{ user.name }}</h2>
+        <h2 style="font-weight: 600; line-height: 1; font-size: 16px">{{ username }}</h2>
         <div style="color: hsla(0, 0%, 97%, .25); line-height: 1;">{{ formattedTime }}</div>
       </div>
       <p>{{ content }}</p>
@@ -11,34 +11,22 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'chat-message',
+<script setup lang="ts">
+import { computed, defineProps } from 'vue'
+import { useAuth } from 'src/lib/composables/useAuth'
+const { user } = useAuth()
 
-  props: {
-    user: {
-      name: {
-        type: String,
-        required: true
-      }
-    },
-    createdAt: {
-      type: Date,
-      required: true
-    },
+const props = defineProps<{
+  username: string,
+  createdAt: Date,
+  content: string
+}>()
 
-    content: {
-      type: String,
-      required: true
-    }
-  },
+const isHighlighted = props.content.includes(`@${user.value.nickname}`);
 
-  computed: {
-    formattedTime() {
-      return this.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  }
-}
+const formattedTime = computed(() =>
+  props.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+)
 </script>
 
 <style scoped>
@@ -49,6 +37,11 @@ export default {
   border-radius: 20px;
   background: hsla(0, 0%, 97%, .05);
   color: hsla(0, 0%, 97%, .56);
+}
+
+.highlighted {
+  background-color: hsla(200, 100%, 60%, 0.5); /* Light blue highlight */
+  border-left: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
 }
 
 #chat-header h1 {

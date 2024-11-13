@@ -34,16 +34,11 @@ class Ws {
       })
 
       // Handle chat messages
-      socket.on('chat:message', (data: { chatId: string; message: string }) => {
-        const messageData = {
-          id: Date.now(),
-          userId: socket.id,
-          message: data.message,
-          timestamp: new Date(),
-        }
+      socket.on('chat:message', (data) => {
+        console.log('Message received: ', data)
+        // Broadcast to room including myself
 
-        // Broadcast to room
-        this.io?.to(data.chatId).emit('chat:message', messageData)
+        this.io?.to(data.chatId).emit('chat:message', data)
       })
 
       // Handle typing status

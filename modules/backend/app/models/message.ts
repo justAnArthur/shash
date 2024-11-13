@@ -1,9 +1,9 @@
-import { BaseModel, beforeCreate, belongsTo, column } from "@adonisjs/lucid/orm"
-import { DateTime } from "luxon"
-import User from "#models/user"
-import type { BelongsTo } from "@adonisjs/lucid/types/relations"
-import Chat from "#models/chat"
-import { randomUUID } from "node:crypto"
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
+import User from '#models/user'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Chat from '#models/chat'
+import { randomUUID } from 'node:crypto'
 
 export default class Message extends BaseModel {
   @column({ isPrimary: true })
@@ -16,9 +16,6 @@ export default class Message extends BaseModel {
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
 
   // ---
 

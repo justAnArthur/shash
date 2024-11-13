@@ -19,37 +19,39 @@ router
   })
   .prefix('user')
 
-router.group(() => {
-  const ChatController = () => import('#controllers/chat-controller')
-  router
-    .group(() => {
-      router.get('byId/:chat_id', [ChatController, 'byId'])
-      router.get('public', [ChatController, 'publicChats'])
-      router.get('mine', [ChatController, 'mineChats'])
-      router.post('join/:chat_id', [ChatController, 'joinChat'])
-      router.put('create', [ChatController, 'createChat'])
-      router.post('invite', [ChatController, 'inviteToChat'])
-      router.get('invites', [ChatController, 'invitedChats'])
-      router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
-    })
-    .prefix('chat')
+router
+  .group(() => {
+    const ChatController = () => import('#controllers/chat-controller')
+    router
+      .group(() => {
+        router.get('byId/:chat_id', [ChatController, 'byId'])
+        router.get('public', [ChatController, 'publicChats'])
+        router.get('mine', [ChatController, 'mineChats'])
+        router.post('join/:chat_id', [ChatController, 'joinChat'])
+        router.put('create', [ChatController, 'createChat'])
+        router.post('invite', [ChatController, 'inviteToChat'])
+        router.get('invites', [ChatController, 'invitedChats'])
+        router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
+      })
+      .prefix('chat')
 
-  const MessageController = () => import('#controllers/message-controller')
-  router
-    .group(() => {
-      router.get('byChat/:chat_id', [MessageController, 'byChat'])
-    })
-    .prefix('message')
+    const MessageController = () => import('#controllers/message-controller')
+    router
+      .group(() => {
+        router.get('byChat/:chat_id', [MessageController, 'byChat'])
+        router.post('send', [MessageController, 'sendMessage'])
+      })
+      .prefix('message')
 
-  const UserController = () => import('#controllers/user-controller')
-  router
-    .group(() => {
-      router.get('byQuery/:query', [UserController, 'queryUsers'])
-    })
-    .prefix('user')
-})
+    const UserController = () => import('#controllers/user-controller')
+    router
+      .group(() => {
+        router.get('byQuery/:query', [UserController, 'queryUsers'])
+      })
+      .prefix('user')
+  })
   .use(
     middleware.auth({
-      guards: ['api']
+      guards: ['api'],
     })
   )
