@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useAuth } from 'src/lib/composables/useAuth'
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  console.log(user.value);
 </script>
 <template>
   <header class="header">
