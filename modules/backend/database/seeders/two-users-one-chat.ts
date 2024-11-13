@@ -1,7 +1,6 @@
 import User from '#models/user'
 import Chat from '#models/chat'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import hash from '@adonisjs/core/services/hash'
 
 export default class TwoUsersOneChatSeeder extends BaseSeeder {
   public async run() {
@@ -12,7 +11,7 @@ export default class TwoUsersOneChatSeeder extends BaseSeeder {
       email: 'user1@user.user',
       password: 'user1',
       // @ts-ignore
-      notificationStatus: 'ENABLED',
+      notificationStatus: 'ENABLED'
     })
 
     const user2 = await User.create({
@@ -22,13 +21,13 @@ export default class TwoUsersOneChatSeeder extends BaseSeeder {
       email: 'user2@user.user',
       password: 'user2',
       // @ts-ignore
-      notificationStatus: 'ENABLED',
+      notificationStatus: 'ENABLED'
     })
 
     const chat = await Chat.create({
       userOwnerId: user1.id,
       channelName: 'Shared chat',
-      isPrivate: false,
+      isPrivate: false
     })
 
     await chat.related('users').attach([user1.id, user2.id])

@@ -4,21 +4,45 @@
     <div style="display:flex; gap: 0.5rem; align-items: center; justify-content: space-between">
       <div class="chat-info">
         <div style="display: flex; gap: 0.25rem; align-items: center">
+          <svg v-if="props.isPrivate" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="lucide lucide-lock">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+
           <h2 class="chat-name">{{ props.chatName }}</h2>
           <div class="message-dot"/>
+
+          <svg v-if="props.invited" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="lucide lucide-party-popper">
+            <path d="M5.8 11.3 2 22l10.7-3.79"/>
+            <path d="M4 3h.01"/>
+            <path d="M22 8h.01"/>
+            <path d="M15 2h.01"/>
+            <path d="M22 20h.01"/>
+            <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/>
+            <path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/>
+            <path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/>
+            <path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/>
+          </svg>
         </div>
         <p class="message-time">{{ timeDisplay }}</p>
       </div>
-      <div class="q-btn three-dots" :class="{ 'menu-visible': menuVisible }">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="lucide lucide-log-out">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" x2="9" y1="12" y2="12"/>
-        </svg>
-      </div>
+
+      <svg v-if="props.invited" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="lucide lucide-square-x">
+        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+        <path d="m15 9-6 6"/>
+        <path d="m9 9 6 6"/>
+      </svg>
     </div>
+
     <div class="last-message" v-if="props.lastMessage">
       <p class="message-author">{{ props.lastMessage.author }}</p>
       <p class="message-text">
@@ -30,18 +54,14 @@
 
 <script setup lang="ts">
 import { defineProps, onBeforeUnmount, onMounted, ref } from 'vue'
-import { IMessage } from './models.ts'
+import { IMessage } from "src/app/components/models"
 
-const props = defineProps({
-  chatName: {
-    type: String,
-    required: true
-  },
-  lastMessage: {
-    type: IMessage,
-    required: true
-  }
-})
+const props = defineProps<{
+  chatName: string,
+  lastMessage?: IMessage,
+  isPrivate?: boolean,
+  invited?: boolean
+}>()
 
 const timeDisplay = ref('')
 const menuVisible = ref(false)
@@ -73,7 +93,7 @@ onBeforeUnmount(() => {
 
 const updateTime = () => {
   // Chat won't open without this line
-  if(!props.lastMessage) return;
+  if (!props.lastMessage) return
   const time = Date.now() - props.lastMessage.time
   if (time < 60 * 1000) {
     setNextUpdate(60 * 1000)

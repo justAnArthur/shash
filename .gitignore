@@ -6,3 +6,4 @@ package-lock.json
 /.vscode
 
 **/.env*.local
+/modules/frontend/.quasar/*

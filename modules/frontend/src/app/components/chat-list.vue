@@ -14,20 +14,25 @@
   <create-chat-form v-if="isFormVisible" id="chat-create-form"/>
 
   <ul id="chat-list">
-    <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage"/>
+    <li v-for="chat in invitesChat" :key="chat.id" class="chat-item" @click="acceptChatInvite(chat.id)">
+      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"/>
     </li>
 
-    <li v-if="!chatsMine || chatsMine.length === 0">No chats available</li>
+    <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"/>
+    </li>
+
+    <li v-if="!chatsMine || chatsMine.length === 0">No participating in chats</li>
   </ul>
 </template>
 
 <script lang="ts">
-import  CreateChatForm from "src/app/components/create-chat-form.vue"
+import CreateChatForm from "src/app/components/create-chat-form.vue"
 import { onMounted, ref } from "vue"
 import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
 import ChatListItem from "src/app/components/chat-list-item.vue"
 import { useRouter } from "vue-router"
+import { api } from "boot/axios"
 
 export default {
   components: { ChatListItem, CreateChatForm },
@@ -42,13 +47,24 @@ export default {
 
     const router = useRouter()
 
-    onMounted(() => updateChatMine())
+    const invitesChats = ref<any[]>([])
+
+    onMounted(() => {
+      updateChatMine()
+      api.get('/chat/invites').then(({ data }) => invitesChats.value = data)
+    })
 
     function openChat(chatId: string) {
       router.push("/chats/" + chatId)
     }
 
-    return { chatsMine, openChat, isFormVisible, toggleFormVisible }
+    async function acceptChatInvite(chatId: string) {
+      await api.post("/chat/invite/accept/" + chatId)
+      invitesChats.value = invitesChats.value.filter(chat => chat.id !== chatId)
+      await updateChatMine()
+    }
+
+    return { chatsMine, invitesChat: invitesChats, openChat, acceptChatInvite, isFormVisible, toggleFormVisible }
   }
 }
 </script>
@@ -84,9 +100,14 @@ export default {
   opacity: 1;
 }
 
-.chat-item:hover .three-dots,
-.three-dots.menu-visible {
+.chat-item:hover {
   opacity: 1;
+}
+
+#chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .chat-list-header {

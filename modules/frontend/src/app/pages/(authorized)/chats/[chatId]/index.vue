@@ -1,6 +1,9 @@
 <template>
   <main class="chat">
-    <command-line v-if="chatId"/>
+    <command-line
+      v-if="chat"
+      :chat="chat"
+    />
 
     <chat-message
       v-for="message in messages"
@@ -11,8 +14,8 @@
     />
 
     <chat-head
-      v-if="chatId"
-      :channel-name="`Quasar is !best`"
+      v-if="chat"
+      :channel-name="chat.channelName"
     />
   </main>
 </template>
@@ -29,28 +32,30 @@ import { useRoute } from "vue-router"
 export default {
   components: { CommandLine, ChatHead, ChatMessage },
   setup() {
-    const messages = ref<any[]>([])
-    const chatId = ref<undefined | string>()
     const route = useRoute()
 
-    const fetchMessages = async (id: string) => {
+    const chat = ref<any>()
+    const messages = ref<any[]>([])
+
+    async function fetchChat(id: string) {
+      chat.value = await api.get(`/chat/byId/${id}`).then(({ data }) => data)
+    }
+
+    async function fetchMessages(id: string) {
       messages.value = await api.get(`/message/byChat/${id}`).then(({ data }) => data)
     }
 
-    watch(chatId, (newId) => {
-      if (newId) {
-        fetchMessages(newId)
-      }
-    })
-
-    watch(() => route.params.chatId, (newChatId) => {
-      if (newChatId) {
-        chatId.value = newChatId as string
-        fetchMessages(chatId.value)
+    watch(() => route.params.chatId, (chatId) => {
+      if (chatId) {
+        fetchChat(chatId as string)
+        fetchMessages(chatId as string)
+      } else {
+        chat.value = undefined
+        messages.value = []
       }
     }, { immediate: true })
 
-    return { messages, chatId }
+    return { chat, messages }
   }
 }
 </script>

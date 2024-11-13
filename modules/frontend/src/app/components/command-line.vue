@@ -1,44 +1,21 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { api } from "boot/axios"
-import type Chat from "@slash/backend/app/models/chat"
-import { updateChatMine } from "src/app/components/chat-list.store"
+import { useRouter } from "vue-router"
+import { commands as _commands } from "src/app/components/command-line.commands"
+import { useAuth } from "src/lib/composables/useAuth"
+
+const props = defineProps<{
+  chat?: any
+}>()
+
+const router = useRouter()
+const auth = useAuth()
 
 const inputValue = ref('')
 const selectedSuggestionIndex = ref<number | null>(null)
 const suggestions = ref<{ text: string; onEnter?: () => void }[]>([])
 
-const commands = [
-  {
-    slash: '/join',
-    parameters: ['chatName'],
-    suggestions: async (chatName?: string) => {
-      if (chatName === undefined) return []
-
-      const { data: chats } = await api.get<Chat[]>('/chat/public?search=' + chatName)
-
-      return chats.map(chat => ({
-        text: chat.channelName,
-        onEnter: async () => {
-          await api.put('/chat/join/' + chat.id)
-          await updateChatMine()
-        }
-      }))
-    }
-  }
-]
-
-// Async function to fetch chats
-const getChats = async (query) => {
-  return new Promise<{ id: number; channelName: string }[]>((resolve) => {
-    setTimeout(() => {
-      const chats = [...new Array(100)]
-        .map((_, index) => ({ id: index, channelName: `Channel ${index}` }))
-        .filter((chat) => chat.channelName.includes(query))
-      resolve(chats)
-    }, 1000)
-  })
-}
+const commands = _commands({ router, context: { chat: props.chat, userId: auth.user.value?.id } })
 
 const onInput = () => {
   suggestions.value = []

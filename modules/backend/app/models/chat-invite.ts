@@ -26,6 +26,9 @@ export default class ChatInvite extends BaseModel {
   declare chatId: string
 
   @column()
+  declare createdByUserId: string
+
+  @column()
   declare userId: string
 
   @column()
@@ -38,4 +41,7 @@ export default class ChatInvite extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => User)
+  declare createdByUser: BelongsTo<typeof User>
 }

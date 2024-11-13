@@ -16,7 +16,7 @@ Content-Type: application/json
 GET http://localhost:3333/chat/public?search=shared
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer oat_Mg.LVVldUVDMEt1cHdERVIzYUY2ejd4TjdlT21UNVMza1NDSGo4Tm1QeDI0NjE5MjEwNTc
+Authorization: Bearer oat_Mw.Z3o0QW1lX2M5ZTFiTExwN3JPX2Jtbmd4T2JmWEpvcTdzQUF3MzVVSTI1NzM5ODA4MTI
 
 ####
 GET http://localhost:3333/chat/mine
