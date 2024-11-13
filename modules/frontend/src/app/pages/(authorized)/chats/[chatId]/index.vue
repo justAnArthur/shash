@@ -16,7 +16,7 @@
 
     <chat-head
       v-if="chat"
-      :channel-name="chat.channelName"
+      :chat="chat"
     />
   </main>
 </template>

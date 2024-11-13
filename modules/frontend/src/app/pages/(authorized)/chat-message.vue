@@ -22,7 +22,7 @@ const props = defineProps<{
   content: string
 }>()
 
-const isHighlighted = props.content.includes(`@${user.value.nickname}`);
+const isHighlighted = props.content.includes(`@${user.value?.nickname}`);
 
 const formattedTime = computed(() =>
   props.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

@@ -32,6 +32,8 @@ router
         router.post('invite', [ChatController, 'inviteToChat'])
         router.get('invites', [ChatController, 'invitedChats'])
         router.post('invite/accept/:chat_id', [ChatController, 'acceptChatInvite'])
+        router.post('leave/:chat_id', [ChatController, 'leaveChat'])
+        router.delete('destroy/:chat_id', [ChatController, 'destroyChat'])
       })
       .prefix('chat')
 
@@ -52,6 +54,6 @@ router
   })
   .use(
     middleware.auth({
-      guards: ['api'],
+      guards: ['api']
     })
   )

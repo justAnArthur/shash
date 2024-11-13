@@ -2,7 +2,7 @@ import { api } from "boot/axios"
 import type { Router } from "vue-router"
 import { updateChatMine } from "src/app/components/chat-list.store"
 
-export const commands = ({ router, context: { chat, userId } }: { router: Router, context: any, userId: any }) => [
+export const commands = ({ router, context: { chat, userId } }: { router: Router, context: any }) => [
   {
     slash: '/join',
     parameters: ['chatName'],
@@ -67,6 +67,8 @@ export const commands = ({ router, context: { chat, userId } }: { router: Router
             }
           })
         })
-    }
+    },
+    visible: !!chat && (chat.isPrivate === false || chat.ownerUserId === userId)
   }
 ]
+  .filter(command => command.visible !== false)

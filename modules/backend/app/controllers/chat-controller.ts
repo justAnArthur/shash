@@ -45,7 +45,7 @@ export default class ChatController {
           query.where('user_id', user.id)
         })
         .preload('messages', (query) => {
-          query.orderBy('created_at', 'desc').limit(1)
+          query.orderBy('created_at', 'desc').limit(1).preload('user')
         })
 
       const result = userChats.map(chat => {
@@ -164,6 +164,47 @@ export default class ChatController {
     } catch (error) {
       console.error(error)
       return response.internalServerError('Cannot accept chat invite')
+    }
+  }
+
+  async leaveChat({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const chatId = request.param('chat_id')
+
+      const chat = await Chat.findOrFail(chatId)
+      await chat.related('users').detach([user.id])
+
+      const usersCount = await chat.related('users').query().count('* as total')
+      // @ts-ignore
+      if (usersCount[0].total < 1) {
+        await chat.delete()
+      }
+
+      return response.ok({ message: 'Successfully left the chat' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot leave the chat')
+    }
+  }
+
+  async destroyChat({ auth, request, response }: HttpContext) {
+    try {
+      const user = await auth.authenticate()
+      const chatId = request.param('chat_id')
+
+      const chat = await Chat.findOrFail(chatId)
+
+      if (chat.userOwnerId !== user.id) {
+        return response.forbidden({ message: 'You are not the owner of this chat' })
+      }
+
+      await chat.delete()
+
+      return response.ok({ message: 'Chat deleted successfully' })
+    } catch (error) {
+      console.error(error)
+      return response.internalServerError('Cannot delete chat')
     }
   }
 }

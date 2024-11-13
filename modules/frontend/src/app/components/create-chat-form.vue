@@ -1,15 +1,55 @@
 <template>
   <form class="create-chat-form">
     <div class="input-group">
-      <input class="input-field" type="text" placeholder="Chat name" />
+      <input class="input-field" type="text" placeholder="Chat name" v-model="chatName"/>
     </div>
     <div class="input-group-checkbox">
       <label for="private" class="checkbox-label">Private</label>
-      <input class="input-checkbox" type="checkbox" name="private" value="private" id="private" />
+      <input class="input-checkbox" type="checkbox" name="private" v-model="isPrivate" id="private"/>
     </div>
     <button class="q-btn create-btn" type="button" @click="createChat">Create</button>
   </form>
 </template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import { useRouter } from "vue-router"
+import { updateChatMine } from "src/app/components/chat-list.store"
+import { api } from "boot/axios"
+
+export default defineComponent({
+  props: {
+    onSubmit: {
+      type: Function,
+      required: true
+    }
+  },
+  setup(props) {
+    const router = useRouter()
+    const chatName = ref('')
+    const isPrivate = ref(false)
+
+    const createChat = async () => {
+      try {
+        const response = await api.put('/chat/create', { chatName: chatName.value, isPrivate: isPrivate.value })
+        props.onSubmit(response.data)
+        updateChatMine()
+        router.push('/chats/' + response.data.chat.id)
+        console.log('Chat created successfully:', response.data)
+      } catch (error) {
+        console.error('Error creating chat:', error)
+      }
+    }
+
+    return {
+      createChat,
+      chatName,
+      isPrivate
+    }
+  }
+})
+</script>
+
 <style scoped>
 /* TODO: checkbox style refactor */
 .create-chat-form {
@@ -61,7 +101,7 @@
   border: 1px solid var(--color-10);
 }
 
-@media only screen and (max-width :1024px) {
+@media only screen and (max-width: 1024px) {
   .create-chat-form {
     max-width: 100%;
     align-items: center;
