@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <create-chat-form v-if="isFormVisible" :on-submit="toggleFormVisible" id="chat-create-form"/>
+  <create-chat-form v-if="isFormVisible" :onSubmit="toggleFormVisible" id="chat-create-form"/>
 
   <ul id="chat-list">
     <li v-for="chat in invitesChat" :key="chat.id" class="chat-item" @click="acceptChatInvite(chat.id)">
