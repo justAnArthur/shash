@@ -52,7 +52,7 @@ export default class ChatController {
         const lastMessage = chat.messages[0] || null
         return {
           ...chat.serialize(),
-          lastMessage: lastMessage ? lastMessage.serialize() : null
+          lastMessage: lastMessage ? lastMessage.serialize() : null,
         }
       })
 

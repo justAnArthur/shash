@@ -3,8 +3,10 @@ import Message from '#models/message'
 import Chat from '#models/chat'
 import emitter from '@adonisjs/core/services/emitter'
 export default class MessageController {
-  async byChat({ params, response }: HttpContext) {
+  async byChat({ params, request, response }: HttpContext) {
     const { chat_id: chatId } = params
+    const page = Number.parseInt(request.input('page', 1), 10) // Get page number, default to 1
+    const perPage = 10 // Number of messages per page
 
     try {
       const messages = await Message.query()
@@ -13,6 +15,11 @@ export default class MessageController {
           query.select('nickname')
         })
         .orderBy('created_at', 'desc')
+        .offset((page - 1) * perPage)
+        .limit(perPage)
+
+      const totalMessages = await Message.query().where('chat_id', chatId).count('* as total')
+      const total = totalMessages[0]?.$extras?.total || 0
 
       // Map the messages to the desired format
       const formattedMessages = messages.map((message) => ({
@@ -22,7 +29,15 @@ export default class MessageController {
         createdAt: message.createdAt.toISO(),
       }))
 
-      return response.json(formattedMessages)
+      return response.json({
+        data: formattedMessages,
+        meta: {
+          total,
+          perPage,
+          currentPage: page,
+          lastPage: Math.ceil(total / perPage),
+        },
+      })
     } catch (error) {
       console.error(error)
       return response.status(500).json({ error: 'Unable to fetch messages' })
