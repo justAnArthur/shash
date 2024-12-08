@@ -58,12 +58,13 @@ router
       .group(() => {
         router.get('byQuery/:query', [UserController, 'queryUsers'])
         router.get('byChat/:chat_id', [UserController, 'getUsersByChatId'])
+        router.post('notifications', [UserController, 'setStatus'])
       })
       .prefix('user')
   })
   .use(
     middleware.auth({
-      guards: ['api']
+      guards: ['api'],
     })
   )
 
