@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import ChatMember from "src/app/pages/(authorized)/chat-member.vue"
+import ChatMember from "src/app/components/chat-member.vue"
 import { useAuth } from "src/lib/composables/useAuth"
 import { api } from "boot/axios"
 import { updateChatMine } from "src/app/components/chat-list.store"

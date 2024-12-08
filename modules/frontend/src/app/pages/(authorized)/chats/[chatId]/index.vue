@@ -49,8 +49,8 @@ import { io, Socket } from "socket.io-client";
 import { api } from "boot/axios";
 import { useAuth } from 'src/lib/composables/useAuth';
 import CommandLine from 'src/app/components/command-line.vue';
-import ChatMessage from "src/app/pages/(authorized)/chat-message.vue";
-import ChatHead from "src/app/pages/(authorized)/chat-head.vue";
+import ChatMessage from "src/app/components/chat-message.vue";
+import ChatHead from "src/app/components/chat-head.vue";
 
 const socket = ref<Socket | null>(null);
 socket.value = io('http://localhost:3333'); // replace with your server URL
