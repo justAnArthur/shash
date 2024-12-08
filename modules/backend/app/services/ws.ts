@@ -41,13 +41,16 @@ class Ws {
       //  this.io?.to(data.chatId).emit('chat:message', data)
       //})
 
-      //// Handle typing status
-      //socket.on('user:typing', (data: { chatId: string; isTyping: boolean }) => {
-      //  socket.to(data.chatId).emit('user:typing', {
-      //    userId: socket.id,
-      //    isTyping: data.isTyping,
-      //  })
-      //})
+      // Handle typing status
+      socket.on('chat:typing', (data: { chatId: string; content: string; username: string }) => {
+        console.log(data)
+        socket.to(data.chatId).emit('chat:typing', {
+          chatId: data.chatId,
+          userId: socket.id,
+          content: data.content,
+          username: data.username,
+        })
+      })
 
       // Handle disconnection
       socket.on('disconnect', () => {

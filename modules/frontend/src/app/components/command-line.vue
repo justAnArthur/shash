@@ -7,6 +7,7 @@ import { useAuth } from "src/lib/composables/useAuth"
 const props = defineProps<{
   chat?: any
   sendMessage?: any,
+  typingMessage?:any,
 }>()
 
 const router = useRouter()
@@ -22,6 +23,7 @@ const onInput = () => {
   suggestions.value = []
 
   if (!inputValue.value.startsWith('/')) {
+    props.typingMessage(inputValue.value)
     return
   }
 
