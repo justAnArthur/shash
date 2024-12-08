@@ -34,7 +34,6 @@ export function useNotifications() {
     ) {
       if (permission.value === "granted") {
         const notification = new Notification(title, options);
-        console.log(notification);
         return notification;
       } else {
         requestPermission().then((bool) => {
