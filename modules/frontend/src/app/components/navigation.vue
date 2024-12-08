@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { useAuth } from 'src/lib/composables/useAuth'
   const { logout, user } = useAuth();
-  console.log(user.value);
 </script>
 <template>
   <header class="header">
@@ -148,5 +147,9 @@
   max-width: 3rem;
   max-height: 3rem;
   aspect-ratio: 1/1;
+}
+#chat-header-modal {
+  background-color: var(--color-10);
+  border-radius: 10px;
 }
 </style>

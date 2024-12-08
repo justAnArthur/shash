@@ -15,72 +15,61 @@
 
   <ul id="chat-list">
     <li v-for="chat in invitesChat" :key="chat.id" class="chat-item highlighted">
-      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"
-                      :accept-invite="() =>acceptChatInvite(chat.id)" :reject-invite="() =>rejectChatInvite(chat.id)"/>
+      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate" :accept-invite="() =>acceptChatInvite(chat.id)" :reject-invite="() =>rejectChatInvite(chat.id)"/>
     </li>
 
     <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"
-                      :chatId="chat.id"/>
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate" :chatId="chat.id"/>
     </li>
 
     <li v-if="!chatsMine || chatsMine.length === 0">No participating in chats</li>
   </ul>
 </template>
 
-<script lang="ts">
-import CreateChatForm from "src/app/components/create-chat-form.vue"
-import { onMounted, ref } from "vue"
-import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
-import ChatListItem from "src/app/components/chat-list-item.vue"
-import { useRouter } from "vue-router"
-import { api } from "boot/axios"
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import CreateChatForm from "src/app/components/create-chat-form.vue";
+import ChatListItem from "src/app/components/chat-list-item.vue";
+import { chatsMine, updateChatMine } from "src/app/components/chat-list.store";
+import { api } from "boot/axios";
 
-export default {
-  components: { ChatListItem, CreateChatForm },
-  setup() {
-    const isFormVisible = ref(false)
+// Reactive state
+const isFormVisible = ref(false);
+const invitesChat = ref<any[]>([]);
 
-    const toggleFormVisible = () => {
-      isFormVisible.value = !isFormVisible.value
-    }
+// Router
+const router = useRouter();
 
-    // ---
+// Toggle form visibility
+const toggleFormVisible = () => {
+  isFormVisible.value = !isFormVisible.value;
+};
 
-    const router = useRouter()
+// Fetch user's chat invites on component mount
+onMounted(() => {
+  updateChatMine();
+  api.get("/chat/invites").then(({ data }) => {
+    invitesChat.value = data;
+  });
+});
 
-    const invitesChats = ref<any[]>([])
+// Open a specific chat
+const openChat = (chatId: string) => {
+  router.push("/chats/" + chatId);
+};
 
-    onMounted(() => {
-      updateChatMine()
-      api.get('/chat/invites').then(({ data }) => invitesChats.value = data)
-    })
+// Accept a chat invite
+const acceptChatInvite = async (chatId: string) => {
+  await api.post("/chat/invite/accept/" + chatId);
+  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId);
+};
 
-    function openChat(chatId: string) {
-      router.push("/chats/" + chatId)
-    }
-
-    async function acceptChatInvite(chatId: string) {
-      await api.post("/chat/invite/accept/" + chatId)
-      invitesChats.value = invitesChats.value.filter(chat => chat.id !== chatId)
-    }
-
-    async function rejectChatInvite(chatId: string) {
-      await api.delete("/chat/invite/reject/" + chatId)
-      invitesChats.value = invitesChats.value.filter(chat => chat.id !== chatId)
-    }
-
-    return {
-      chatsMine,
-      invitesChat: invitesChats,
-      openChat,
-      acceptChatInvite,
-      rejectChatInvite,
-      isFormVisible,
-      toggleFormVisible
-    }
-  }
-}
+// Reject a chat invite
+const rejectChatInvite = async (chatId: string) => {
+  await api.delete("/chat/invite/reject/" + chatId);
+  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId);
+};
 </script>
 
 <style>

@@ -82,8 +82,8 @@ const props = defineProps<{
   isPrivate?: boolean,
   invited?: boolean
   chatId?: string,
-  acceptInvite: Function,
-  rejectInvite: Function
+  acceptInvite?: Function,
+  rejectInvite?: Function
 }>()
 const deleteOrQuit = async () => {
   await api.delete(`/chat/${props.chatId}?quit=false`)

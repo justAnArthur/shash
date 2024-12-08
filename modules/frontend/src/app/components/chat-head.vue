@@ -45,90 +45,79 @@
   </header>
 </template>
 
-<script>
-import ChatMember from "src/app/components/chat-member.vue"
-import { useAuth } from "src/lib/composables/useAuth"
-import { api } from "boot/axios"
-import { updateChatMine } from "src/app/components/chat-list.store"
+<script setup lang="ts">
+import { ref, computed, watch, onMounted, defineProps} from "vue";
+import ChatMember from "src/app/components/chat-member.vue";
+import { useAuth } from "src/lib/composables/useAuth";
+import { api } from "boot/axios";
+import { updateChatMine } from "src/app/components/chat-list.store";
 
-export default {
-  name: 'chat-head',
-  components: { ChatMember },
+// Props
+const { chat } = defineProps<{
+  chat;
+}>();
 
-  props: {
-    chat: {
-      type: Object,
-      required: true
-    }
-  },
+// Auth
+const auth = useAuth();
 
-  computed: {
-    isMobile() {
-      return this.$q.screen.xs || this.$q.screen.sm
-    }
-  },
+// Reactive state
+const menu = ref(false);
+const mobileData = ref(false);
+const bluetooth = ref(false);
+const users = ref([] as any[]);
 
-  methods: {
-    logout() {
-      this.menu = false
-      this.$q.notify({
-        message: 'Logged out successfully',
-        color: 'green',
-        position: 'top'
-      })
-    },
-    leaveChat() {
-      api.post('/chat/leave/' + this.chat.id)
-        .then(() => {
-          updateChatMine()
-          this.$router.push({ path: '/' })
-        })
-    },
-    destroyChat() {
-      api.delete('/chat/destroy/' + this.chat.id)
-        .then(() => {
-          updateChatMine()
-          this.$router.push({ path: '/' })
-        })
-    },
-    fetchUsers() {
-      api.get('/user/byChat/' + this.chat.id)
-        .then(response => {
-          this.users = response.data
-        })
-        .catch(error => {
-          console.error('Error fetching users:', error)
-        })
-    }
-  },
+// Computed properties
+const isAdmin = computed(() => auth.user.value.id === chat.userOwnerId);
+const isMobile = computed(() => {
+  return window.innerWidth < 600; // Adjust breakpoint as needed
+});
 
-  data() {
-    const auth = useAuth()
+// Methods
+const logout = () => {
+  menu.value = false;
+  window.alert('Logged out successfully'); // Replace with `notify` in your environment if available
+};
 
-    return {
-      menu: false,
-      mobileData: false,
-      isAdmin: auth.user.value.id === this.chat.userOwnerId,
-      bluetooth: false,
-      users: []
-    }
-  },
-
-  watch: {
-    'chat.id': {
-      handler(newId) {
-        const auth = useAuth()
-        this.isAdmin = auth.user.value.id === this.chat.userOwnerId
-        this.fetchUsers()
-      },
-      immediate: true
-    }
-  },
-
-  created() {
-    this.fetchUsers()
+const leaveChat = async () => {
+  try {
+    await api.post(`/chat/leave/${chat.id}`);
+    updateChatMine();
+    window.location.href = "/"; // Adjust if using Vue Router
+  } catch (error) {
+    console.error("Error leaving chat:", error);
   }
-}
+};
+
+const destroyChat = async () => {
+  try {
+    await api.delete(`/chat/destroy/${chat.id}`);
+    updateChatMine();
+    window.location.href = "/"; // Adjust if using Vue Router
+  } catch (error) {
+    console.error("Error destroying chat:", error);
+  }
+};
+
+const fetchUsers = async () => {
+  try {
+    const response = await api.get(`/user/byChat/${chat.id}`);
+    users.value = response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
+// Watchers
+watch(
+  () => chat.id,
+  async () => {
+    await fetchUsers();
+  },
+  { immediate: true }
+);
+
+// Lifecycle hooks
+onMounted(fetchUsers);
 </script>
 <style>
 #chat-header {
