@@ -33,6 +33,7 @@ const checkWidth = () => {
 onMounted(() => {
   checkWidth()
   window.addEventListener('resize', checkWidth)
+
 })
 
 onUnmounted(() => {

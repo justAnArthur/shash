@@ -1,29 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { api } from 'boot/axios'
+import { useAuth } from "src/lib/composables/useAuth";
 import type { User } from "src/lib/composables/useAuth"
 import type { AxiosResponse } from "axios"
 
+const { getUserFromServer, user} = useAuth();
 api.get('/user/me')
   .then((res: AxiosResponse<User>) => {
     notificationStatus.value = res.data.notificationStatus
     notificationWhenTaggedStatus.value = res.data.notifyWhenTagged
   })
 
-const notificationStatus = ref()
+const notificationStatus = ref(user.value.notificationStatus)
 
 async function setNotificationStatus(newStatus: string) {
   try {
     const response = await api.post('/user/notifications', { status: newStatus })
     if (response.status === 200) {
       notificationStatus.value = newStatus
+      getUserFromServer();
     }
   } catch (error) {
     console.error('Error updating notification status:', error)
   }
 }
 
-const notificationWhenTaggedStatus = ref()
+const notificationWhenTaggedStatus = ref(user.value.notificationWhenTaggedStatus)
 
 async function setNotificationWhenTaggedStatus(newStatus: string) {
   try {
@@ -57,8 +60,8 @@ async function setNotificationWhenTaggedStatus(newStatus: string) {
       </button>
       <button
         class="tab-button"
-        :class="{ 'selected-tab': notificationStatus === 'OFFLNE' }"
-        @click="setNotificationStatus('OFFLNE'); notificationStatus = 'OFFLNE'"
+        :class="{ 'selected-tab': notificationStatus === 'OFFLINE' }"
+        @click="setNotificationStatus('OFFLINE'); notificationStatus = 'OFFLINE'"
       >
         Offline
       </button>

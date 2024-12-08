@@ -17,7 +17,7 @@ const inputValue = ref('')
 const selectedSuggestionIndex = ref<number | null>(null)
 const suggestions = ref<{ text: string; onEnter?: () => void }[]>([])
 
-const commands = _commands({ router, context: { chat: props.chat, userId: auth.userLocalStorage.value?.id } })
+const commands = _commands({ router, context: { chat: props.chat, userId: auth.user.value?.id } })
 
 const onInput = () => {
   suggestions.value = []

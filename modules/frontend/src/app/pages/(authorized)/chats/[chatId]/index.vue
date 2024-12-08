@@ -46,20 +46,19 @@
 import { debounce, useQuasar } from 'quasar'
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
-import { io, Socket } from "socket.io-client"
 import { api } from "boot/axios"
 import { useAuth } from 'src/lib/composables/useAuth'
 import CommandLine from 'src/app/components/command-line.vue'
 import ChatMessage from "src/app/components/chat-message.vue"
 import ChatHead from "src/app/components/chat-head.vue"
 import { useNotifications } from "src/lib/composables/useNotification"
+import { useSocket } from "src/lib/composables/useSocket"
 
-const socket = ref<Socket | null>(null)
-socket.value = io('http://localhost:3333') // replace with your server URL
 
-const { userFromServer, userLocalStorage } = useAuth()
+const { user } = useAuth()
 const $q = useQuasar()
 const { showNotification } = useNotifications()
+const { on, off, emit } = useSocket();
 const route = useRoute()
 
 const chat = ref<any>()
@@ -88,7 +87,7 @@ function closeModal() {
 
 async function fetchChat(id: string) {
   chat.value = await api.get(`/chat/byId/${id}`).then(({ data }) => data)
-  socket.value?.emit('join:room', chat.value.id)
+  emit('join:room', chat.value.id)
 }
 
 async function fetchMessages(id: string) {
@@ -147,20 +146,20 @@ watch(() => route.params.chatId, (chatId) => {
 }, { immediate: true })
 
 function typingMessage(content: string) {
-  if (socket.value && chat.value) {
+  if (chat.value) {
     const message = {
       chatId: chat.value.id,
       content,
-      username: userLocalStorage.value?.nickname
+      username: user.value?.nickname
     }
-    socket.value.emit('chat:typing', message)
+    emit('chat:typing', message)
   }
 }
 
 const debouncedTyping = debounce(typingMessage, 100)
 
 function sendMessage(content: string) {
-  if (socket.value && chat.value) {
+  if (chat.value) {
     const message = {
       chatId: chat.value.id,
       content
@@ -182,69 +181,50 @@ function scrollToBottom() {
   }
 }
 
-onMounted(() => {
-  if (socket.value) {
-    socket.value.on('chat:message', (incomingMessage) => {
-      console.log('incomingMessage', incomingMessage)
-
-      if (incomingMessage.chatId === chat.value?.id) {
-        messages.value.push(incomingMessage)
-
-        const mayToShowMessage =
-          !$q.appVisible && // there is a bug in `appVisible`, when used same web in multiple tabs (in one tab is visible, is  the second - not)
-          userFromServer.value?.notificationStatus == 'ONLINE' &&
-          (userFromServer.value?.notifyWhenTagged == 'ALL' || incomingMessage.content.includes(`@${userFromServer.value?.nickname}`))
-
-        if (mayToShowMessage)
-          showNotification(incomingMessage.username, {
-            body: incomingMessage.content.slice(0, 20)
-          })
-
-        typingMessages.value = typingMessages.value.filter(
-          (msg) => msg.username !== incomingMessage.username)
-
-        nextTick(() => {
-          if (chatContainer.value &&
-            chatContainer.value.scrollHeight - chatContainer.value.scrollTop <= chatContainer.value.clientHeight + 100) {
-            scrollToBottom()
-          }
-        })
-      }
-    })
-    socket.value.on('chat:typing', (incomingMessage) => {
-      if (incomingMessage.chatId === chat.value?.id) {
-        const existingTypingIndex = typingMessages.value.findIndex(
-          (msg) => msg.username === incomingMessage.username
-        )
-
-        if (existingTypingIndex !== -1) {
-          // Update existing typing message
-          typingMessages.value[existingTypingIndex].content = incomingMessage.content
-        } else {
-          // Add new typing message
-          typingMessages.value.push(incomingMessage)
-
-          // Remove the typing indicator after 10 seconds if no further updates
-          setTimeout(() => {
-            typingMessages.value = typingMessages.value.filter(
-              (msg) => msg.username !== incomingMessage.username
-            )
-          }, 10000)
-        }
-        if (chatContainer.value &&
-          chatContainer.value.scrollHeight - chatContainer.value.scrollTop <= chatContainer.value.clientHeight + 100) {
-          scrollToBottom()
-        }
+function handleIncomingMessage(incomingMessage: any) {
+  if (incomingMessage.chatId === chat.value?.id) {
+    messages.value.push(incomingMessage)
+    nextTick(() => {
+      if (chatContainer.value) {
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight
       }
     })
   }
+}
+
+function handleTypingMessage(typingMessage: any) {
+  if (typingMessage.chatId === chat.value?.id) {
+    const existingIndex = typingMessages.value.findIndex(
+      (msg) => msg.username === typingMessage.username
+    );
+
+    if (existingIndex === -1) {
+      // User is typing for the first time; push the new typing message
+      typingMessages.value.push(typingMessage);
+    } else {
+      // User is already typing; update the message content
+      typingMessages.value[existingIndex] = typingMessage;
+    }
+
+    // Set a timeout to remove the typing message after 10 seconds
+    setTimeout(() => {
+      typingMessages.value.splice(existingIndex, 1); // Remove the typing message
+    }, 10000); // 10 seconds
+  }
+}
+
+onMounted(() => {
+  const chatId = route.params.chatId as string
+  fetchChat(chatId)
+  fetchMessages(chatId)
+
+  on("chat:message", handleIncomingMessage)
+  on("chat:typing", handleTypingMessage)
 })
 
 onUnmounted(() => {
-  if (socket.value) {
-    socket.value.off('chat:message')
-    socket.value.off('chat:typing')
-  }
+  off('chat:message', handleIncomingMessage)
+  off('chat:typing', handleTypingMessage)
 })
 </script>
 

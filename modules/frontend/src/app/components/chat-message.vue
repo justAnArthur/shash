@@ -21,7 +21,7 @@
 import { computed, defineProps } from 'vue'
 import { useAuth } from 'src/lib/composables/useAuth'
 
-const { userLocalStorage, userFromServer } = useAuth()
+const { user } = useAuth()
 
 const props = defineProps<{
   username: string;
@@ -29,10 +29,10 @@ const props = defineProps<{
   content: string;
 }>()
 
-const isMe = computed(() => props.username === userLocalStorage.value?.nickname)
+const isMe = computed(() => props.username === user.value?.nickname)
 
 const isHighlighted = computed(() =>
-  props.content.includes(`@${userLocalStorage.value?.nickname}`)
+  props.content.includes(`@${user.value?.nickname}`)
 )
 
 const formattedTime = computed(() =>

@@ -66,7 +66,7 @@ const bluetooth = ref(false)
 const users = ref([] as any[])
 
 // Computed properties
-const isAdmin = computed(() => auth.userLocalStorage.value.id === chat.userOwnerId)
+const isAdmin = computed(() => auth.user.value.id === chat.userOwnerId)
 const isMobile = computed(() => {
   return window.innerWidth < 600 // Adjust breakpoint as needed
 })

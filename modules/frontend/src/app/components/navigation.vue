@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useAuth } from 'src/lib/composables/useAuth'
 
-const { logout, userLocalStorage } = useAuth()
+const { logout, user } = useAuth()
 const drawerOpen = ref(false)
 const menu = ref(false)
 
@@ -141,6 +141,7 @@ const openDrawer = (event?: MouseEvent) => {
 }
 
 .hamburger {
+  width: 25%;
   display: none;
   cursor: pointer;
 }

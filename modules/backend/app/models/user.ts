@@ -15,7 +15,7 @@ import { randomUUID } from 'node:crypto'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
-  passwordColumnName: 'password'
+  passwordColumnName: 'password',
 })
 
 export default class User extends compose(BaseModel, AuthFinder) {
@@ -26,7 +26,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
     prefix: 'oat_',
     table: 'auth_access_tokens',
     type: 'auth_token',
-    tokenSecretLength: 40
+    tokenSecretLength: 40,
   })
 
   @column({ isPrimary: true })
@@ -70,7 +70,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   // Chats owned by the user
   @hasMany(() => Chat, {
-    foreignKey: 'userOwnerId'
+    foreignKey: 'userOwnerId',
   })
   declare ownedChats: HasMany<typeof Chat>
 
@@ -78,7 +78,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @manyToMany(() => Chat, {
     pivotTable: 'user_chats',
     pivotForeignKey: 'user_id',
-    pivotRelatedForeignKey: 'chat_id'
+    pivotRelatedForeignKey: 'chat_id',
   })
   declare chats: ManyToMany<typeof Chat>
 
@@ -92,24 +92,23 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   // Kicks where the user is being kicked
   @hasMany(() => ChatKick, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare kicksReceived: HasMany<typeof ChatKick>
 
   // Kicks performed by the user
   @hasMany(() => ChatKicker, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare kicksPerformed: HasMany<typeof ChatKicker>
 
   // Bans where the user is banned
   @hasMany(() => ChatBan, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
   })
   declare bans: HasMany<typeof ChatBan>
 
   // ---
 
-  async run() {
-  }
+  async run() {}
 }

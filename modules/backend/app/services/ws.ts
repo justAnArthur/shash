@@ -13,8 +13,8 @@ class Ws {
     this.booted = true
     this.io = new Server(server.getNodeServer(), {
       cors: {
-        origin: '*'
-      }
+        origin: '*',
+      },
     })
 
     // Handle chat events
@@ -29,7 +29,7 @@ class Ws {
         // Notify room about new user
         socket.to(chatId).emit('user:joined', {
           userId: socket.id,
-          timestamp: new Date()
+          timestamp: new Date(),
         })
       })
 
@@ -43,12 +43,11 @@ class Ws {
 
       // Handle typing status
       socket.on('chat:typing', (data: { chatId: string; content: string; username: string }) => {
-        console.log(data)
+        console.log(socket.id)
         socket.to(data.chatId).emit('chat:typing', {
           chatId: data.chatId,
-          userId: socket.id,
           content: data.content,
-          username: data.username
+          username: data.username,
         })
       })
 
