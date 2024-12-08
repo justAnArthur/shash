@@ -85,7 +85,8 @@ const props = defineProps<{
   acceptInvite?: Function,
   rejectInvite?: Function
 }>()
-const deleteOrQuit = async () => {
+const deleteOrQuit = async (ev) => {
+  ev.stopPropagation();
   await api.delete(`/chat/${props.chatId}?quit=false`)
   await updateChatMine()
 }

@@ -225,6 +225,7 @@ onUnmounted(() => {
 
 <style scoped>
 .chat {
+  padding-top: 0;
   display: flex;
   flex-direction: column;
   height: 98vh;

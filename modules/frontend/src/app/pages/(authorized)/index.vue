@@ -1,27 +1,24 @@
 <template>
-  <main>
-    <div id="select-chat">
-      Select chat
-    </div>
+  <div class="chat">
+      <div style="flex:1;">
+      <chat-list/>
+      </div>
+        <command-line/>
+  </div>
 
-    <command-line/>
-  </main>
 </template>
 
-<script setup lang="ts">
-import CommandLine from "src/app/components/command-line.vue"
+<script setup>
+import ChatList from 'src/app/components/chat-list.vue'
+import CommandLine from 'src/app/components/command-line.vue'
 </script>
-
 <style scoped>
-main {
+
+.chat {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 98vh;
 }
 
-#select-chat {
-  flex: 1 1 0%;
-  display: grid;
-  place-content: center;
-}
+
 </style>

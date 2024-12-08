@@ -2,7 +2,7 @@
   <section id="page">
     <navigation/>
 
-    <main style="padding: 1rem; flex: 1 1 0;">
+    <main>
       <router-view name="home"/>
     </main>
 
@@ -28,9 +28,6 @@ watch(() => route.fullPath, (newPath) => {
 
 const checkWidth = () => {
   isWideEnough.value = window.innerWidth > 1024
-  if (isWideEnough.value) {
-    router.replace('/')
-  }
 }
 
 onMounted(() => {
@@ -43,7 +40,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 #page {
   display: flex;
   height: 100vh;
@@ -58,5 +55,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+main {
+padding: 1rem;
+flex: 1 1 0;
 }
 </style>

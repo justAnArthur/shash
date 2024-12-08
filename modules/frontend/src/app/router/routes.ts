@@ -10,14 +10,15 @@ const routes: RouteRecordRaw[] = [
         name: "Home",
         components: {
           home: () => import("src/app/pages/(authorized)/index.vue"),
-          "chat-side": () => import("src/app/components/chat-list.vue"),
+          _: () => import("src/app/components/chat-list.vue"),
         },
       },
       {
         path: "/chats/:chatId",
         name: "Chat",
         components: {
-          home: () => import("src/app/pages/(authorized)/chats/[chatId]/index.vue"),
+          home: () =>
+            import("src/app/pages/(authorized)/chats/[chatId]/index.vue"),
           "chat-side": () => import("src/app/components/chat-list.vue"),
         },
       },
@@ -49,7 +50,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/register",
         name: "Register",
-        component: () => import("src/app/pages/(unauthorized)/register/index.vue"),
+        component: () =>
+          import("src/app/pages/(unauthorized)/register/index.vue"),
       },
       {
         path: "/login",

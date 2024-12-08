@@ -90,6 +90,7 @@ const rejectChatInvite = async (chatId: string) => {
 }
 
 .chat-item {
+  margin: 3px 0;
   position: relative;
   display: flex;
   flex-grow: 1;
@@ -127,12 +128,20 @@ const rejectChatInvite = async (chatId: string) => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#chat-list::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .chat-list-title {
@@ -145,6 +154,9 @@ const rejectChatInvite = async (chatId: string) => {
   #chat-create-form {
     margin: 0;
     margin-left: auto;
+  }
+  .chat-list-header {
+    margin-top: 2rem;
   }
 }
 </style>
