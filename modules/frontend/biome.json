@@ -1,6 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
-  "extends": ["../../packages/biome/biome.json"],
+  "extends": [
+    "../../packages/biome/biome.json"
+  ],
   "javascript": {
     "formatter": {
       "semicolons": "asNeeded"

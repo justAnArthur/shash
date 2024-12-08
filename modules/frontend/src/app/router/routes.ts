@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,8 +10,8 @@ const routes: RouteRecordRaw[] = [
         name: "Home",
         components: {
           home: () => import("src/app/pages/(authorized)/index.vue"),
-          _: () => import("src/app/components/chat-list.vue"),
-        },
+          _: () => import("src/app/components/chat-list.vue")
+        }
       },
       {
         path: "/chats/:chatId",
@@ -19,25 +19,25 @@ const routes: RouteRecordRaw[] = [
         components: {
           home: () =>
             import("src/app/pages/(authorized)/chats/[chatId]/index.vue"),
-          "chat-side": () => import("src/app/components/chat-list.vue"),
-        },
+          "chat-side": () => import("src/app/components/chat-list.vue")
+        }
       },
       {
         path: "/chats",
         name: "Chats",
         components: {
-          home: () => import("src/app/pages/(authorized)/chats/index.vue"),
-        },
+          home: () => import("src/app/pages/(authorized)/chats/index.vue")
+        }
       },
       {
         path: "/settings",
         name: "Settings",
         components: {
-          home: () => import("src/app/pages/(authorized)/settings/index.vue"),
-        },
-      },
+          home: () => import("src/app/pages/(authorized)/settings/index.vue")
+        }
+      }
     ],
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true }
   },
   {
     path: "/auth",
@@ -45,26 +45,26 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        redirect: "/login",
+        redirect: "/login"
       },
       {
         path: "/register",
         name: "Register",
         component: () =>
-          import("src/app/pages/(unauthorized)/register/index.vue"),
+          import("src/app/pages/(unauthorized)/register/index.vue")
       },
       {
         path: "/login",
         name: "Login",
-        component: () => import("src/app/pages/(unauthorized)/login/index.vue"),
-      },
-    ],
+        component: () => import("src/app/pages/(unauthorized)/login/index.vue")
+      }
+    ]
   },
   {
     path: "/:catchAll(.*)*",
     name: "NotFound",
-    component: () => import("src/app/pages/ErrorNotFound.vue"),
-  },
-];
+    component: () => import("src/app/pages/ErrorNotFound.vue")
+  }
+]
 
-export default routes;
+export default routes

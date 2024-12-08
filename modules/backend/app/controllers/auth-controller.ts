@@ -20,7 +20,7 @@ export default class AuthController {
     const token = await User.accessTokens.create(user)
     return response.ok({
       token: token.toJSON().token,
-      user: user.serialize(),
+      user: user.serialize()
     })
   }
 

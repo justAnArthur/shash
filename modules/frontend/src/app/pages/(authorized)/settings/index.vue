@@ -1,52 +1,89 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 import { api } from 'boot/axios'
+import type { User } from "src/lib/composables/useAuth"
+import type { AxiosResponse } from "axios"
 
-const tab = ref('online');
-const notificationStatus = ref('');
+api.get('/user/me')
+  .then((res: AxiosResponse<User>) => {
+    notificationStatus.value = res.data.notificationStatus
+    notificationWhenTaggedStatus.value = res.data.notifyWhenTagged
+  })
 
+const notificationStatus = ref()
 
-// Function to set the new notification status based on the selected tab
-async function setStatus(newStatus: string) {
+async function setNotificationStatus(newStatus: string) {
   try {
-    const response = await api.post('/user/notifications', { status: newStatus.toUpperCase() });
+    const response = await api.post('/user/notifications', { status: newStatus })
     if (response.status === 200) {
-      notificationStatus.value = newStatus;
+      notificationStatus.value = newStatus
     }
   } catch (error) {
-    console.error('Error updating notification status:', error);
+    console.error('Error updating notification status:', error)
   }
 }
 
+const notificationWhenTaggedStatus = ref()
+
+async function setNotificationWhenTaggedStatus(newStatus: string) {
+  try {
+    const response = await api.post('/user/notificationsWhenTagged', { status: newStatus })
+    if (response.status === 200) {
+      notificationWhenTaggedStatus.value = newStatus
+    }
+  } catch (error) {
+    console.error('Error updating notification status:', error)
+  }
+}
 </script>
 
 <template>
-  <div>
+  <section>
     <h2>Notifications</h2>
     <div class="tab-container">
       <button
         class="tab-button"
-        :class="{ 'selected-tab': tab === 'online' }"
-        @click="setStatus('online'); tab = 'online'"
+        :class="{ 'selected-tab': notificationStatus === 'ONLINE' }"
+        @click="setNotificationStatus('ONLINE'); notificationStatus = 'ONLINE'"
       >
         Online
       </button>
       <button
         class="tab-button"
-        :class="{ 'selected-tab': tab === 'dnd' }"
-        @click="setStatus('dnd'); tab = 'dnd'"
+        :class="{ 'selected-tab': notificationStatus === 'DND' }"
+        @click="setNotificationStatus('DND'); notificationStatus = 'DND'"
       >
         DND
       </button>
       <button
         class="tab-button"
-        :class="{ 'selected-tab': tab === 'offline' }"
-        @click="setStatus('offline'); tab = 'offline'"
+        :class="{ 'selected-tab': notificationStatus === 'OFFLNE' }"
+        @click="setNotificationStatus('OFFLNE'); notificationStatus = 'OFFLNE'"
       >
         Offline
       </button>
     </div>
-  </div>
+  </section>
+
+  <section>
+    <h2>Notification when tagged</h2>
+    <div class="tab-container">
+      <button
+        class="tab-button"
+        :class="{ 'selected-tab': notificationWhenTaggedStatus === 'ALL' }"
+        @click="setNotificationWhenTaggedStatus('ALL'); notificationWhenTaggedStatus = 'ALL'"
+      >
+        All
+      </button>
+      <button
+        class="tab-button"
+        :class="{ 'selected-tab': notificationWhenTaggedStatus === 'TAGGED' }"
+        @click="setNotificationWhenTaggedStatus('TAGGED'); notificationWhenTaggedStatus = 'TAGGED'"
+      >
+        Only tagged
+      </button>
+    </div>
+  </section>
 </template>
 
 <style scoped>
@@ -82,7 +119,7 @@ h2 {
   border-radius: 32px;
   pointer-events: none;
   border: 1.5px solid hsla(0, 0%, 100%, 0.1);
-  -webkit-mask-image: linear-gradient(175deg, #000, transparent 50%);
+  -webkit-mask-image: -webkit-linear-gradient(175deg, #000, transparent 50%);
   mask-image: linear-gradient(175deg, #000, transparent 50%);
 }
 

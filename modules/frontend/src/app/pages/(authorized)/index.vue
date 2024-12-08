@@ -1,9 +1,9 @@
 <template>
   <div class="chat">
-      <div style="flex:1;">
+    <div style="flex:1;">
       <chat-list/>
-      </div>
-        <command-line/>
+    </div>
+    <command-line/>
   </div>
 
 </template>

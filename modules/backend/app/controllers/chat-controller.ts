@@ -52,7 +52,7 @@ export default class ChatController {
         const lastMessage = chat.messages[0] || null
         return {
           ...chat.serialize(),
-          lastMessage: lastMessage ? lastMessage.serialize() : null,
+          lastMessage: lastMessage ? lastMessage.serialize() : null
         }
       })
 
@@ -391,6 +391,12 @@ export default class ChatController {
         kick.isClosed = true
         await kick.save()
       }
+
+      await Message.create({
+        chatId: chat.id,
+        userId: chat.userOwnerId,
+        content: `User with ID ${userId} was resolved in the chat.`
+      })
 
       return response.ok({ message: 'All kicks resolved successfully' })
     } catch (error) {

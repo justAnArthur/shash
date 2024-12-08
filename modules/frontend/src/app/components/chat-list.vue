@@ -15,11 +15,13 @@
 
   <ul id="chat-list">
     <li v-for="chat in invitesChat" :key="chat.id" class="chat-item highlighted">
-      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate" :accept-invite="() =>acceptChatInvite(chat.id)" :reject-invite="() =>rejectChatInvite(chat.id)"/>
+      <chat-list-item :chatName="chat.channelName" :invited="true" :is-private="chat.isPrivate"
+                      :accept-invite="() =>acceptChatInvite(chat.id)" :reject-invite="() =>rejectChatInvite(chat.id)"/>
     </li>
 
     <li v-for="chat in chatsMine" :key="chat.id" class="chat-item" @click="openChat(chat.id)">
-      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate" :chatId="chat.id"/>
+      <chat-list-item :chatName="chat.channelName" :lastMessage="chat.lastMessage" :is-private="chat.isPrivate"
+                      :chatId="chat.id"/>
     </li>
 
     <li v-if="!chatsMine || chatsMine.length === 0">No participating in chats</li>
@@ -27,60 +29,60 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
-import CreateChatForm from "src/app/components/create-chat-form.vue";
-import ChatListItem from "src/app/components/chat-list-item.vue";
-import { chatsMine, updateChatMine } from "src/app/components/chat-list.store";
-import { api } from "boot/axios";
+import { onBeforeUnmount, onMounted, ref } from "vue"
+import { useRouter } from "vue-router"
+import CreateChatForm from "src/app/components/create-chat-form.vue"
+import ChatListItem from "src/app/components/chat-list-item.vue"
+import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
+import { api } from "boot/axios"
 
 // Reactive state
-const isFormVisible = ref(false);
-const invitesChat = ref<any[]>([]);
+const isFormVisible = ref(false)
+const invitesChat = ref<any[]>([])
 
 // Router
-const router = useRouter();
+const router = useRouter()
 
 // Toggle form visibility
 const toggleFormVisible = () => {
-  isFormVisible.value = !isFormVisible.value;
-};
-let updateInterval;
+  isFormVisible.value = !isFormVisible.value
+}
+let updateInterval
 // Fetch user's chat invites on component mount
 // TODO:
 // Change on ws or sse when notifications will be ready
 onMounted(() => {
-  updateChatMine();
+  updateChatMine()
   updateInterval = setInterval(() => {
     api.get("/chat/invites").then(({ data }) => {
-      invitesChat.value = data;
-  });
-  }, 10000);
+      invitesChat.value = data
+    })
+  }, 10000)
   api.get("/chat/invites").then(({ data }) => {
-    invitesChat.value = data;
-  });
-});
+    invitesChat.value = data
+  })
+})
 
 onBeforeUnmount(() => {
-  clearInterval(updateInterval);
+  clearInterval(updateInterval)
 })
 // Open a specific chat
 const openChat = (chatId: string) => {
-  router.push("/chats/" + chatId);
-};
+  router.push("/chats/" + chatId)
+}
 
 // Accept a chat invite
 const acceptChatInvite = async (chatId: string) => {
-  await api.post("/chat/invite/accept/" + chatId);
-  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId);
-  updateChatMine();
-};
+  await api.post("/chat/invite/accept/" + chatId)
+  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId)
+  updateChatMine()
+}
 
 // Reject a chat invite
 const rejectChatInvite = async (chatId: string) => {
-  await api.delete("/chat/invite/reject/" + chatId);
-  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId);
-};
+  await api.delete("/chat/invite/reject/" + chatId)
+  invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId)
+}
 </script>
 
 <style>
@@ -155,6 +157,7 @@ const rejectChatInvite = async (chatId: string) => {
     margin: 0;
     margin-left: auto;
   }
+
   .chat-list-header {
     margin-top: 2rem;
   }

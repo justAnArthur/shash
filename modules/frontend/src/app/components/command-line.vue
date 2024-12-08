@@ -7,7 +7,7 @@ import { useAuth } from "src/lib/composables/useAuth"
 const props = defineProps<{
   chat?: any
   sendMessage?: any,
-  typingMessage?:any,
+  typingMessage?: any,
 }>()
 
 const router = useRouter()
@@ -17,7 +17,7 @@ const inputValue = ref('')
 const selectedSuggestionIndex = ref<number | null>(null)
 const suggestions = ref<{ text: string; onEnter?: () => void }[]>([])
 
-const commands = _commands({ router, context: { chat: props.chat, userId: auth.user.value?.id } })
+const commands = _commands({ router, context: { chat: props.chat, userId: auth.userLocalStorage.value?.id } })
 
 const onInput = () => {
   suggestions.value = []
@@ -96,10 +96,9 @@ const onKeyEnter = async () => {
   if (suggestions.value.length === 0) return
 
   const suggestion = suggestions.value[selectedSuggestionIndex.value || 0]
-  const { clear } = await suggestion?.onEnter?.()
+  await suggestion?.onEnter?.()
   // if (clear)
   //   inputValue.value = ''
-
 
 
   selectedSuggestionIndex.value = null

@@ -17,7 +17,7 @@ export default class OldChat extends BaseSeeder {
         email: 'user5@user.user',
         password: 'user3',
         // @ts-ignore
-        notificationStatus: 'ENABLED',
+        notificationStatus: 'ENABLED'
       })
     }
 
@@ -32,7 +32,7 @@ export default class OldChat extends BaseSeeder {
       chat = await Chat.create({
         userOwnerId: user.id,
         channelName: 'Old Chat',
-        isPrivate: false,
+        isPrivate: false
       })
     }
 
@@ -41,10 +41,10 @@ export default class OldChat extends BaseSeeder {
       {
         chatId: chat.id,
         userId: user.id,
-        content: 'Old message',
+        content: 'Old message'
       },
       {
-        createdAt: DateTime.local().minus({ days: 31 }),
+        createdAt: DateTime.local().minus({ days: 31 })
       }
     )
 
@@ -58,7 +58,7 @@ export default class OldChat extends BaseSeeder {
       recentChat = await Chat.create({
         userOwnerId: user.id,
         channelName: 'Active Chat',
-        isPrivate: false,
+        isPrivate: false
       })
     }
 
@@ -67,10 +67,10 @@ export default class OldChat extends BaseSeeder {
       {
         chatId: recentChat.id,
         userId: user.id,
-        content: 'Recent message',
+        content: 'Recent message'
       },
       {
-        createdAt: DateTime.local(),
+        createdAt: DateTime.local()
       }
     )
 

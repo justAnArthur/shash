@@ -56,15 +56,17 @@ router
     const UserController = () => import('#controllers/user-controller')
     router
       .group(() => {
+        router.get('me', [UserController, 'getMe'])
         router.get('byQuery/:query', [UserController, 'queryUsers'])
         router.get('byChat/:chat_id', [UserController, 'getUsersByChatId'])
         router.post('notifications', [UserController, 'setStatus'])
+        router.post('notificationsWhenTagged', [UserController, 'setNotifyOnlyWhenTaggedStatus'])
       })
       .prefix('user')
   })
   .use(
     middleware.auth({
-      guards: ['api'],
+      guards: ['api']
     })
   )
 

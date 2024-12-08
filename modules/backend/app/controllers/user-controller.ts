@@ -45,37 +45,66 @@ export default class UserController {
       return response.internalServerError('Cannot retrieve users for the chat')
     }
   }
+
   async setStatus({ auth, request, response }: HttpContext) {
     try {
-      // Authenticate the user
       await auth.authenticate()
 
-      // Retrieve the authenticated user
       const user = auth.getUserOrFail()
       const id = user.id
 
-      // Ensure request body contains the expected notification status
       const notificationStatus = request.body().status
       if (!['ONLINE', 'OFFLINE', 'DND'].includes(notificationStatus)) {
         return response.badRequest('Notification status is required.')
       }
-      const notifications = {
-        ONLINE: 'ONLINE',
-        OFFLINE: 'NULL',
-        DND: 'DISABLED',
-      }
-      // Update the user's notification status
-      await User.query()
-        .update({ notificationStatus: String(notifications[notificationStatus]) })
+
+      await User.query() // @ts-ignore
+        .update({ notificationStatus: String(notificationStatus) })
         .where('id', id)
 
-      // Respond with success message
       return response.ok({ message: 'Notification status updated successfully.' })
     } catch (error) {
       console.error('Error updating notification status:', error)
 
-      // Respond with a more specific error message
       return response.internalServerError('Cannot update notification status.')
+    }
+  }
+
+  async setNotifyOnlyWhenTaggedStatus({ auth, request, response }: HttpContext) {
+    try {
+      await auth.authenticate()
+
+      const user = auth.getUserOrFail()
+      const id = user.id
+
+      const notifyWhenTagged = request.body().status
+      if (notifyWhenTagged === undefined) {
+        return response.badRequest('Notify only when tagged status is required.')
+      }
+
+      await User.query() // @ts-ignore
+        .update({ notifyWhenTagged })
+        .where('id', id)
+
+      return response.ok({ message: 'Notify only when tagged status updated successfully.' })
+    } catch (error) {
+      console.error('Error updating notify only when tagged status:', error)
+
+      return response.internalServerError('Cannot update notify only when tagged status.')
+    }
+  }
+
+  async getMe({ auth, response }: HttpContext) {
+    try {
+      await auth.authenticate()
+
+      const user = auth.getUserOrFail()
+
+      return response.ok(user)
+    } catch (error) {
+      console.error('Error retrieving user:', error)
+
+      return response.internalServerError('Cannot retrieve user.')
     }
   }
 }

@@ -1,4 +1,4 @@
-import { BaseModel, belongsTo, column, hasMany, beforeCreate  } from "@adonisjs/lucid/orm"
+import { BaseModel, beforeCreate, belongsTo, column, hasMany } from "@adonisjs/lucid/orm"
 import type { BelongsTo, HasMany } from "@adonisjs/lucid/types/relations"
 import ChatKicker from "#models/chat-kicker"
 import User from "#models/user"

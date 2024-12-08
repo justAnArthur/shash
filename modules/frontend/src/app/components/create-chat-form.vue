@@ -11,29 +11,30 @@
   </form>
 </template>
 <script setup lang="ts">
-  import { ref, defineProps } from 'vue'
-  import { updateChatMine } from "src/app/components/chat-list.store";
-  import { useRouter } from 'vue-router'
-  import { api } from "boot/axios";
-  const props = defineProps<{
-    onSubmit: Function;
-  }>()
-  const router = useRouter()
-  const chatName = ref('')
-  const isPrivate = ref(false)
+import { defineProps, ref } from 'vue'
+import { updateChatMine } from "src/app/components/chat-list.store"
+import { useRouter } from 'vue-router'
+import { api } from "boot/axios"
 
-    const createChat = async () => {
-      try {
-        console.log(props)
-        const response = await api.put('/chat/create', { chatName: chatName.value, isPrivate: isPrivate.value })
-        props.onSubmit(response.data)
-        updateChatMine()
-        router.push('/chats/' + response.data.chat.id)
-        console.log('Chat created successfully:', response.data)
-      } catch (error) {
-        console.error('Error creating chat:', error)
-      }
-    }
+const props = defineProps<{
+  onSubmit: Function;
+}>()
+const router = useRouter()
+const chatName = ref('')
+const isPrivate = ref(false)
+
+const createChat = async () => {
+  try {
+    console.log(props)
+    const response = await api.put('/chat/create', { chatName: chatName.value, isPrivate: isPrivate.value })
+    props.onSubmit(response.data)
+    updateChatMine()
+    router.push('/chats/' + response.data.chat.id)
+    console.log('Chat created successfully:', response.data)
+  } catch (error) {
+    console.error('Error creating chat:', error)
+  }
+}
 </script>
 
 <style scoped>

@@ -13,7 +13,7 @@ const bodyParserConfig = defineConfig({
    */
   form: {
     convertEmptyStringsToNull: true,
-    types: ['application/x-www-form-urlencoded'],
+    types: ['application/x-www-form-urlencoded']
   },
 
   /**
@@ -25,8 +25,8 @@ const bodyParserConfig = defineConfig({
       'application/json',
       'application/json-patch+json',
       'application/vnd.api+json',
-      'application/csp-report',
-    ],
+      'application/csp-report'
+    ]
   },
 
   /**
@@ -48,8 +48,8 @@ const bodyParserConfig = defineConfig({
      * and fields
      */
     limit: '20mb',
-    types: ['multipart/form-data'],
-  },
+    types: ['multipart/form-data']
+  }
 })
 
 export default bodyParserConfig

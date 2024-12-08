@@ -1,4 +1,4 @@
-import { BaseModel, belongsTo, column ,beforeCreate } from "@adonisjs/lucid/orm"
+import { BaseModel, beforeCreate, belongsTo, column } from "@adonisjs/lucid/orm"
 import { DateTime } from "luxon"
 import Chat from "#models/chat"
 import User from "#models/user"

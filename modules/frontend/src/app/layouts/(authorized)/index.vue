@@ -56,8 +56,9 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 1rem;
 }
+
 main {
-padding: 1rem;
-flex: 1 1 0;
+  padding: 1rem;
+  flex: 1 1 0;
 }
 </style>

@@ -1,45 +1,43 @@
 <template>
   <div :class="['chat-message', isMe ? 'right' : 'left']">
-    <!-- Avatar -->
-    <img v-if="!isMe" class="avatar" :src="`https://picsum.photos/seed/${username}/200/200`" :alt="username" />
+    <img v-if="!isMe" class="avatar" :src="`https://picsum.photos/seed/${username}/200/200`" :alt="username"/>
 
-    <!-- Message Content -->
     <div style="display: grid; gap: 0.5rem">
-      <!-- Username and Time -->
       <div style="display: flex; gap: 0.5rem; align-items: center">
-        <h2 v-if="!isMe" style="font-weight: 600; line-height: 1; font-size: 16px">{{  username }}</h2>
+        <div style="display: flex; align-items: center; gap: 0.5rem">
+          <h2 v-if="!isMe" style="font-weight: 600; line-height: 1; font-size: 16px">{{ username }}</h2>
+
+          <!--          <user-status-badge :notification-status="user?.notificationStatus"-->
+          <!--                             :notify-when-tagged="user?.notifyWhenTagged"/>-->
+        </div>
         <div style="color: hsla(0, 0%, 97%, 0.25); line-height: 1;">{{ formattedTime }}</div>
       </div>
-      <!-- Highlighted Content -->
       <p :class="{ highlighted: isHighlighted }">{{ content }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
-import { useAuth } from 'src/lib/composables/useAuth';
+import { computed, defineProps } from 'vue'
+import { useAuth } from 'src/lib/composables/useAuth'
 
-const { user } = useAuth();
+const { userLocalStorage, userFromServer } = useAuth()
 
 const props = defineProps<{
   username: string;
   createdAt: Date;
   content: string;
-}>();
+}>()
 
-// Check if the current user sent the message
-const isMe = computed(() => props.username === user.value?.nickname);
+const isMe = computed(() => props.username === userLocalStorage.value?.nickname)
 
-// Check if the content includes a mention of the user
 const isHighlighted = computed(() =>
-  props.content.includes(`@${user.value?.nickname}`)
-);
+  props.content.includes(`@${userLocalStorage.value?.nickname}`)
+)
 
-// Format the timestamp
 const formattedTime = computed(() =>
   props.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-);
+)
 </script>
 
 <style scoped>

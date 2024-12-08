@@ -11,8 +11,22 @@
  **/
 
 
+import { AppVisibility } from 'quasar'
 
 
-
-export default { config: {"brand":{"primary":"#0d205e","secondary":"#24252c","accent":"#9C27B0","dark":"#11141f","dark-page":"#0b0c14","positive":"#21BA45","negative":"#C10015","info":"#31CCEC","warning":"#F2C037"}} }
+export default {
+  config: {
+    "brand": {
+      "primary": "#0d205e",
+      "secondary": "#24252c",
+      "accent": "#9C27B0",
+      "dark": "#11141f",
+      "dark-page": "#0b0c14",
+      "positive": "#21BA45",
+      "negative": "#C10015",
+      "info": "#31CCEC",
+      "warning": "#F2C037"
+    }
+  }, plugins: { AppVisibility }
+}
 
