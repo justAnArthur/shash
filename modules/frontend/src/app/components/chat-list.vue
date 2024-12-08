@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import CreateChatForm from "src/app/components/create-chat-form.vue";
 import ChatListItem from "src/app/components/chat-list-item.vue";
@@ -45,15 +45,25 @@ const router = useRouter();
 const toggleFormVisible = () => {
   isFormVisible.value = !isFormVisible.value;
 };
-
+let updateInterval;
 // Fetch user's chat invites on component mount
+// TODO:
+// Change on ws or sse when notifications will be ready
 onMounted(() => {
   updateChatMine();
+  updateInterval = setInterval(() => {
+    api.get("/chat/invites").then(({ data }) => {
+      invitesChat.value = data;
+  });
+  }, 10000);
   api.get("/chat/invites").then(({ data }) => {
     invitesChat.value = data;
   });
 });
 
+onBeforeUnmount(() => {
+  clearInterval(updateInterval);
+})
 // Open a specific chat
 const openChat = (chatId: string) => {
   router.push("/chats/" + chatId);
@@ -63,6 +73,7 @@ const openChat = (chatId: string) => {
 const acceptChatInvite = async (chatId: string) => {
   await api.post("/chat/invite/accept/" + chatId);
   invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId);
+  updateChatMine();
 };
 
 // Reject a chat invite
