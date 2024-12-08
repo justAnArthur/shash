@@ -26,7 +26,7 @@ export default class MessageController {
         id: message.id,
         username: message.user.nickname,
         content: message.content,
-        createdAt: message.createdAt.toISO()
+        createdAt: message.createdAt.toISO(),
       }))
 
       return response.json({
@@ -35,8 +35,8 @@ export default class MessageController {
           total,
           perPage,
           currentPage: page,
-          lastPage: Math.ceil(total / perPage)
-        }
+          lastPage: Math.ceil(total / perPage),
+        },
       })
     } catch (error) {
       console.error(error)
@@ -62,7 +62,7 @@ export default class MessageController {
     const message = await Message.create({
       userId: user.id,
       chatId,
-      content
+      content,
     })
 
     // @ts-ignore
@@ -72,8 +72,8 @@ export default class MessageController {
         id: message.id,
         username: user.nickname,
         content: message.content,
-        createdAt: message.createdAt.toISO()
-      }
+        createdAt: message.createdAt.toISO(),
+      },
     })
 
     return response.status(201).json({ success: true, message })

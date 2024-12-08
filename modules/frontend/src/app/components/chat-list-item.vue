@@ -99,8 +99,8 @@ const toggleMenu = () => {
 
 const onMenuItemClick = (action) => {
   console.log(`${action} clicked!`)
-  // Handle menu action (like navigation, etc.)
-  menuVisible.value = false  // Close the menu after an action
+
+  menuVisible.value = false
 }
 
 let intervalId: ReturnType<typeof setInterval>
@@ -119,7 +119,7 @@ onBeforeUnmount(() => {
 })
 
 const updateTime = () => {
-  // Chat won't open without this line
+
   if (!props.lastMessage)
     return
 

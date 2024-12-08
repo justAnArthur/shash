@@ -1,15 +1,11 @@
 <template>
   <div class="not-found-container">
-    <!-- Decorative circle -->
     <div class="circle"></div>
 
-    <!-- Title -->
     <h1 class="title">404</h1>
 
-    <!-- Message -->
     <p class="message">Oops! The page you’re looking for doesn’t exist.</p>
 
-    <!-- Back Button -->
     <router-link to="/" class="back-button">
       Go Back Home
     </router-link>

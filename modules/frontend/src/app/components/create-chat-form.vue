@@ -38,7 +38,7 @@ const createChat = async () => {
 </script>
 
 <style scoped>
-/* TODO: checkbox style refactor */
+
 .create-chat-form {
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@ const createChat = async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  cursor: pointer; /* Ensures the checkbox is clickable when the user clicks anywhere in the label */
+  cursor: pointer;
 }
 
 .checkbox-label {
@@ -81,7 +81,7 @@ const createChat = async () => {
   align-items: center;
   color: hsla(0, 0%, 100%, .56);
   font-size: 1rem;
-  cursor: pointer; /* Allow the label to be clicked too */
+  cursor: pointer;
 }
 
 .input-checkbox {
@@ -95,7 +95,7 @@ const createChat = async () => {
   transition: all 0.3s ease;
 }
 
-/* Style when the checkbox is checked */
+
 .input-checkbox:checked {
   background-color: var(--color-10);
   border-color: var(--color-30);

@@ -35,7 +35,7 @@ export function useAuth() {
 
     if (token.value && user.value) {
       localStorage.setItem("token", token.value);
-      localStorage.setItem("user", JSON.stringify(user.value)); // Stringify user object
+      localStorage.setItem("user", JSON.stringify(user.value));
     }
   };
 
@@ -90,7 +90,7 @@ export function useAuth() {
     const storedUser = localStorage.getItem("user");
     if (storedToken && storedUser) {
       token.value = storedToken;
-      user.value = JSON.parse(storedUser); // Parse user object
+      user.value = JSON.parse(storedUser);
     }
   };
 
@@ -98,7 +98,7 @@ export function useAuth() {
     if (isAuthenticated.value) {
       api.get<User>("/user/me").then((response) => {
         user.value = response.data;
-        localStorage.setItem("user", JSON.stringify(user.value)); // Stringify user object
+        localStorage.setItem("user", JSON.stringify(user.value));
       });
     }
   }

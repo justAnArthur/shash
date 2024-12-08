@@ -101,13 +101,13 @@ h2 {
 }
 
 .tab-button {
-  flex: 1; /* Allow buttons to take equal space */
+  flex: 1;
   margin: 0.5rem;
   border-radius: 32px;
-  background: transparent; /* Make background transparent for styling */
-  border: none; /* Remove default button border */
+  background: transparent;
+  border: none;
   cursor: pointer;
-  padding: 10px; /* Add some padding for a better click area */
+  padding: 10px;
   transition: background-color 0.3s ease;
 }
 
@@ -127,6 +127,6 @@ h2 {
 }
 
 .tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Optional hover effect */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

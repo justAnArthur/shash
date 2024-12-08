@@ -7,8 +7,7 @@
 
     <div class="messages-container" ref="chatContainer" @scroll="onScroll">
       <div v-if="isLoading" class="loading">Loading...</div>
-      <chat-message
-        v-for="message in messages"
+      <chat-message v-for="message in messages"
         :key="message.id"
         :username="message.username"
         :created-at="new Date(message.createdAt)"
@@ -43,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { debounce, useQuasar } from 'quasar'
+import { debounce } from 'quasar'
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { api } from "boot/axios"
@@ -51,13 +50,10 @@ import { useAuth } from 'src/lib/composables/useAuth'
 import CommandLine from 'src/app/components/command-line.vue'
 import ChatMessage from "src/app/components/chat-message.vue"
 import ChatHead from "src/app/components/chat-head.vue"
-import { useNotifications } from "src/lib/composables/useNotification"
 import { useSocket } from "src/lib/composables/useSocket"
 
 
 const { user } = useAuth()
-const $q = useQuasar()
-const { showNotification } = useNotifications()
 const { on, off, emit } = useSocket();
 const route = useRoute()
 
@@ -127,7 +123,6 @@ function onScroll() {
 
   const { scrollTop, scrollHeight, clientHeight } = chatContainer.value
 
-  // Load more when user is within 20% of the top of the chat
   if (scrollTop <= clientHeight * 0.2 && !isLoading.value) {
     fetchMessages(route.params.chatId as string)
   }
@@ -183,6 +178,7 @@ function scrollToBottom() {
 
 function handleIncomingMessage(incomingMessage: any) {
   if (incomingMessage.chatId === chat.value?.id) {
+    if(user.value.notificationStatus === "OFFLINE") return
     messages.value.push(incomingMessage)
     nextTick(() => {
       if (chatContainer.value) {
@@ -194,22 +190,23 @@ function handleIncomingMessage(incomingMessage: any) {
 
 function handleTypingMessage(typingMessage: any) {
   if (typingMessage.chatId === chat.value?.id) {
+    if(user.value.notificationStatus === "OFFLINE") return
     const existingIndex = typingMessages.value.findIndex(
       (msg) => msg.username === typingMessage.username
     );
 
     if (existingIndex === -1) {
-      // User is typing for the first time; push the new typing message
+
       typingMessages.value.push(typingMessage);
     } else {
-      // User is already typing; update the message content
+
       typingMessages.value[existingIndex] = typingMessage;
     }
 
-    // Set a timeout to remove the typing message after 10 seconds
+
     setTimeout(() => {
-      typingMessages.value.splice(existingIndex, 1); // Remove the typing message
-    }, 10000); // 10 seconds
+      typingMessages.value.splice(existingIndex, 1);
+    }, 10000);
   }
 }
 
@@ -276,11 +273,10 @@ onUnmounted(() => {
   z-index: 1000;
 }
 
-/* Modal Content */
 .modal-content {
-  background-color: #22272e; /* Match the site's dark background */
-  color: #fff; /* Light text */
-  border-radius: 8px; /* Rounded corners */
+  background-color: #22272e;
+  color: #fff;
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   width: 90%;
   max-width: 400px;
@@ -290,28 +286,28 @@ onUnmounted(() => {
   gap: 15px;
 }
 
-/* Header Section */
+
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
   color: #ffffff;
 }
 
-/* Body Section */
+
 .modal-body p {
   font-size: 1rem;
-  color: #c3c3c3; /* Softer text color */
+  color: #c3c3c3;
   margin: 0;
 }
 
-/* Footer Section */
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
 }
 
 .close-btn {
-  background-color: #444c56; /* Subtle dark button */
+  background-color: #444c56;
   color: #ffffff;
   border: none;
   padding: 10px 15px;
@@ -321,6 +317,6 @@ onUnmounted(() => {
 }
 
 .close-btn:hover {
-  background-color: #57606a; /* Slightly lighter on hover */
+  background-color: #57606a;
 }
 </style>

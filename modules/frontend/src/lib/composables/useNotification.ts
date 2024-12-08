@@ -27,6 +27,7 @@ export function useNotifications() {
     options: NotificationOptions = {},
     isDirect: boolean,
   ) {
+    console.log(user.value?.notifyWhenTagged);
     if (
       !$q.appVisible &&
       user.value?.notificationStatus === "ONLINE" &&

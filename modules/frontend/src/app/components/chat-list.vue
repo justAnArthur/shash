@@ -36,21 +36,21 @@ import ChatListItem from "src/app/components/chat-list-item.vue"
 import { chatsMine, updateChatMine } from "src/app/components/chat-list.store"
 import { api } from "boot/axios"
 
-// Reactive state
+
 const isFormVisible = ref(false)
 const invitesChat = ref<any[]>([])
 
-// Router
+
 const router = useRouter()
 
-// Toggle form visibility
+
 const toggleFormVisible = () => {
   isFormVisible.value = !isFormVisible.value
 }
 let updateInterval
-// Fetch user's chat invites on component mount
-// TODO:
-// Change on ws or sse when notifications will be ready
+
+
+
 onMounted(() => {
   updateChatMine()
   updateInterval = setInterval(() => {
@@ -66,19 +66,19 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearInterval(updateInterval)
 })
-// Open a specific chat
+
 const openChat = (chatId: string) => {
   router.push("/chats/" + chatId)
 }
 
-// Accept a chat invite
+
 const acceptChatInvite = async (chatId: string) => {
   await api.post("/chat/invite/accept/" + chatId)
   invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId)
   updateChatMine()
 }
 
-// Reject a chat invite
+
 const rejectChatInvite = async (chatId: string) => {
   await api.delete("/chat/invite/reject/" + chatId)
   invitesChat.value = invitesChat.value.filter((chat) => chat.id !== chatId)
@@ -87,8 +87,8 @@ const rejectChatInvite = async (chatId: string) => {
 
 <style>
 .highlighted {
-  background-color: hsla(200, 100%, 60%, 0.5); /* Light blue highlight */
-  border: 4px solid hsla(200, 100%, 60%, 1); /* Blue left border */
+  background-color: hsla(200, 100%, 60%, 0.5);
+  border: 4px solid hsla(200, 100%, 60%, 1);
 }
 
 .chat-item {
@@ -112,7 +112,7 @@ const rejectChatInvite = async (chatId: string) => {
   border-radius: 20px;
   pointer-events: none;
   border: 1px solid hsla(0, 0%, 100%, .1);
-  //-webkit-mask-image: linear-gradient(175deg, #000, transparent 55%);
+
   mask-image: linear-gradient(175deg, #000, transparent 55%);
   opacity: 0;
   transition: opacity .2s;

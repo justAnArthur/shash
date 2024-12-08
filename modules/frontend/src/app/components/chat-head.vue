@@ -51,37 +51,36 @@ import { useAuth } from "src/lib/composables/useAuth"
 import { api } from "boot/axios"
 import { updateChatMine } from "src/app/components/chat-list.store"
 
-// Props
 const { chat } = defineProps<{
   chat;
 }>()
 
-// Auth
+
 const auth = useAuth()
 
-// Reactive state
+
 const menu = ref(false)
 const mobileData = ref(false)
 const bluetooth = ref(false)
 const users = ref([] as any[])
 
-// Computed properties
+
 const isAdmin = computed(() => auth.user.value.id === chat.userOwnerId)
 const isMobile = computed(() => {
-  return window.innerWidth < 600 // Adjust breakpoint as needed
+  return window.innerWidth < 600
 })
 
-// Methods
+
 const logout = () => {
   menu.value = false
-  window.alert('Logged out successfully') // Replace with `notify` in your environment if available
+  window.alert('Logged out successfully')
 }
 
 const leaveChat = async () => {
   try {
     await api.post(`/chat/leave/${chat.id}`)
     updateChatMine()
-    window.location.href = "/" // Adjust if using Vue Router
+    window.location.href = "/"
   } catch (error) {
     console.error("Error leaving chat:", error)
   }
@@ -91,7 +90,7 @@ const destroyChat = async () => {
   try {
     await api.delete(`/chat/destroy/${chat.id}`)
     updateChatMine()
-    window.location.href = "/" // Adjust if using Vue Router
+    window.location.href = "/"
   } catch (error) {
     console.error("Error destroying chat:", error)
   }
@@ -106,7 +105,7 @@ const fetchUsers = async () => {
   }
 }
 
-// Watchers
+
 watch(
   () => chat.id,
   async () => {
@@ -115,7 +114,7 @@ watch(
   { immediate: true }
 )
 
-// Lifecycle hooks
+
 onMounted(fetchUsers)
 </script>
 <style>

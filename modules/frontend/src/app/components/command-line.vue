@@ -97,8 +97,8 @@ const onKeyEnter = async () => {
 
   const suggestion = suggestions.value[selectedSuggestionIndex.value || 0]
   await suggestion?.onEnter?.()
-  // if (clear)
-  //   inputValue.value = ''
+  if (clear)
+    inputValue.value = ''
 
 
   selectedSuggestionIndex.value = null

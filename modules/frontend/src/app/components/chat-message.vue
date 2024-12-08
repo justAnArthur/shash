@@ -43,7 +43,7 @@ const formattedTime = computed(() =>
 <style scoped>
 .chat-message {
   display: flex;
-  max-width: 60%; /* Limits message width */
+  max-width: 60%;
   width: fit-content;
   gap: 1rem;
   padding: 1rem;
@@ -53,17 +53,17 @@ const formattedTime = computed(() =>
   margin-bottom: 1rem;
 }
 
-/* Left-aligned messages */
+
 .chat-message.left {
   align-self: flex-start;
-  margin-left: 0; /* No extra space on the left */
-  margin-right: auto; /* Pushes to the left */
+  margin-left: 0;
+  margin-right: auto;
 }
 
-/* Right-aligned messages */
+
 .chat-message.right {
   align-self: flex-end;
-  margin-right: 0; /* No extra space on the right */
+  margin-right: 0;
   color: white;
 }
 
@@ -77,7 +77,7 @@ const formattedTime = computed(() =>
 }
 
 .highlighted {
-  background-color: hsla(200, 100%, 60%, 0.2); /* Light blue highlight */
+  background-color: hsla(200, 100%, 60%, 0.2);
   border-radius: 8px;
   padding: 0.5rem;
   display: inline-block;
